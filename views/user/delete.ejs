@@ -1,0 +1,23 @@
+<div class="auth__container">
+    <h3 class="auth__title"><%= title.split(' | ')[1]%></h3>
+
+    <form action="/user/delete" method="POST" class="auth__form">
+        <% const passwordError = validationErrors.find(err => err.path === 'password'); %>
+        <div class="field label <% if (error?.path === 'password' || passwordError) { %>invalid<% } %> border">
+            <input
+                    type="password"
+                    name="password"
+                    id="password"
+                    required
+                    autocomplete="off"
+            />
+            <label for="password">Password</label>
+            <% const displayedPasswordError = passwordError || (error?.path === 'password' ? error : null); %>
+            <% if (displayedPasswordError) { %>
+                <span class="error auth__field-error"><%= displayedPasswordError.msg %></span>
+            <% } %>
+        </div>
+
+        <button type="submit" class="auth__submit">Delete Account</button>
+    </form>
+</div>

@@ -1,0 +1,72 @@
+<header>
+    <nav class="navbar jc-sb">
+        <div class="centred">
+            <a href="/">
+                <i class="large-icon">home</i>
+                <span class="navbar__site-name">NestScout</span>
+            </a>
+        </div>
+
+<!--        <div class=navbar__central-menu">-->
+<!--            <i class="medium-icon">person</i>-->
+<!--            <button class="circle extra">-->
+<!--                <i>add</i>-->
+<!--            </button>-->
+<!--            <i class="medium-icon">bar_chart</i>-->
+<!--        </div>-->
+
+        <div class="jc-sb">
+            <% if (!isAuthenticated) { %>
+                <a href="/authentication/login" class="navbar__login">
+                    <button class="border button_large-font">
+                        Log in
+                    </button>
+                </a>
+                <a href="/authentication/signup" class="navbar__signup">
+                    <button class="large button_large-font">
+                        Sign up
+                    </button>
+                </a>
+            <% } else { %>
+                    <button class="active border user__options-button">
+                        <span>
+                            <% const fullName = user.firstName + ' ' + user.lastName; %>
+                            <%= `${fullName.length > 15 ? fullName.slice(0, 15).trim() + '...' : fullName}` %>
+                        </span>
+                        <i>keyboard_arrow_down</i>
+                        <menu class="no-wrap">
+                            <a class="row" href="">
+                                <i>add_business</i>
+                                <span>Make new listing</span>
+                            </a>
+                            <a class="row" href="">
+                                <i>person</i>
+                                <span>My profile</span>
+                            </a>
+                            <a class="row" href="">
+                                <i>bar_chart</i>
+                                <span>My statistics</span>
+                            </a>
+                            <a class="row" href="/user/edit">
+                                <i>edit</i>
+                                <span>Edit account</span>
+                            </a>
+                            <a class="row" href="authentication/logout" onclick="
+                                event.preventDefault();
+                                axios.post('/authentication/logout')
+                                    .then(() => location.reload())
+                                    .catch(err => console.error(err));
+                            ">
+                                <i>logout</i>
+                                <span>Log out</span>
+                            </a>
+                            <a class="row" href="/user/delete">
+                                <i>delete_forever</i>
+                                <span>Delete account</span>
+                            </a>
+                        </menu>
+                    </button>
+                <% } %>
+        </div>
+    </nav>
+</header>

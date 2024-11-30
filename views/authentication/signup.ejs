@@ -1,0 +1,89 @@
+<div class="auth__container">
+    <h3 class="auth__title"><%= title.split(' | ')[1]%></h3>
+
+    <form action="/authentication/signup" method="POST" class="auth__form">
+        <% const firstNameError = validationErrors.find(err => err.path === 'firstName'); %>
+        <div class="field label <% if (error?.path === 'firstName' || firstNameError) { %>invalid<% } %> border">
+            <input
+                    type="text"
+                    name="firstName"
+                    id="firstName"
+                    value="<%= oldInput.firstName %>"
+                    required
+                    autocomplete="off"
+            />
+            <label for="firstName">First name</label>
+            <% const displayedFirstNameError = firstNameError || (error?.path === 'firstName' ? error : null); %>
+            <% if (displayedFirstNameError) { %>
+                <span class="error auth__field-error"><%= displayedFirstNameError.msg %></span>
+            <% } %>
+        </div>
+
+        <% const lastNameError = validationErrors.find(err => err.path === 'lastName'); %>
+        <div class="field label <% if (error?.path === 'lastName' || lastNameError) { %>invalid<% } %> border">
+            <input
+                    type="text"
+                    name="lastName"
+                    id="lastName"
+                    value="<%= oldInput.lastName %>"
+                    autocomplete="off"
+            />
+            <label for="lastName">Last name (optional)</label>
+            <% const displayedLastNameError = lastNameError || (error?.path === 'lastName' ? error : null); %>
+            <% if (displayedLastNameError) { %>
+                <span class="error auth__field-error"><%= displayedLastNameError.msg %></span>
+            <% } %>
+        </div>
+
+        <% const emailError = validationErrors.find(err => err.path === 'email'); %>
+        <div class="field label <% if (error?.path === 'email' || emailError) { %>invalid<% } %> border">
+            <input
+                    type="email"
+                    name="email"
+                    id="email"
+                    value="<%= oldInput.email %>"
+                    required
+                    autocomplete="off"
+            />
+            <label for="email">Email</label>
+            <% const displayedEmailError = emailError || (error?.path === 'email' ? error : null); %>
+            <% if (displayedEmailError) { %>
+                <span class="error auth__field-error"><%= displayedEmailError.msg %></span>
+            <% } %>
+        </div>
+
+        <% const passwordError = validationErrors.find(err => err.path === 'password'); %>
+        <div class="field label <% if (error?.path === 'password' || passwordError) { %>invalid<% } %> border">
+            <input
+                    type="password"
+                    name="password"
+                    id="password"
+                    required
+                    autocomplete="off"
+            />
+            <label for="password">Password</label>
+            <% const displayedPasswordError = passwordError || (error?.path === 'password' ? error : null); %>
+            <% if (displayedPasswordError) { %>
+                <span class="error auth__field-error"><%= displayedPasswordError.msg %></span>
+            <% } %>
+        </div>
+
+        <% const confirmPasswordError = validationErrors.find(err => err.path === 'confirmPassword'); %>
+        <div class="field label <% if (error?.path === 'confirmPassword' || confirmPasswordError) { %>invalid<% } %> border">
+            <input
+                    type="password"
+                    name="confirmPassword"
+                    id="confirmPassword"
+                    required
+                    autocomplete="off"
+            />
+            <label for="confirmPassword">Confirm password</label>
+            <% const displayedConfirmPasswordError = confirmPasswordError || (error?.path === 'confirmPassword' ? error : null); %>
+            <% if (displayedConfirmPasswordError) { %>
+                <span class="error auth__field-error"><%= displayedConfirmPasswordError.msg %></span>
+            <% } %>
+        </div>
+
+        <button type="submit" class="auth__submit">Sign up</button>
+    </form>
+</div>

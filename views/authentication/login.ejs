@@ -1,0 +1,40 @@
+<div class="auth__container">
+    <h3 class="auth__title"><%= title.split(' | ')[1]%></h3>
+
+    <form action="/authentication/login" method="POST" class="auth__form">
+        <% const emailError = validationErrors.find(err => err.path === 'email'); %>
+        <div class="field label <% if (error?.path === 'email' || emailError) { %>invalid<% } %> border">
+            <input
+                    type="email"
+                    name="email"
+                    id="email"
+                    value="<%= oldInput.email %>"
+                    required
+                    autocomplete="off"
+            />
+            <label for="email">Email</label>
+            <% const displayedEmailError = emailError || (error?.path === 'email' ? error : null); %>
+            <% if (displayedEmailError) { %>
+                <span class="error auth__field-error"><%= displayedEmailError.msg %></span>
+            <% } %>
+        </div>
+
+        <% const passwordError = validationErrors.find(err => err.path === 'password'); %>
+        <div class="field label <% if (error?.path === 'password' || passwordError) { %>invalid<% } %> border">
+            <input
+                    type="password"
+                    name="password"
+                    id="password"
+                    required
+                    autocomplete="off"
+            />
+            <label for="password">Password</label>
+            <% const displayedPasswordError = passwordError || (error?.path === 'password' ? error : null); %>
+            <% if (displayedPasswordError) { %>
+                <span class="error auth__field-error"><%= displayedPasswordError.msg %></span>
+            <% } %>
+        </div>
+
+        <button type="submit" class="auth__submit">Login</button>
+    </form>
+</div>

@@ -1,0 +1,22 @@
+<% if (listings.length > 0) { %>
+    <div class="listings">
+        <% listings.forEach(listing => { %>
+            <a class="listings__item" href="listings/<%= listing.id %>">
+                <img src="/images/no-image.jpg" alt="Listing image" class="listing__image">
+                <div class="listing__info">
+                    <p class="f-s-20"><%= listing.title %></p>
+                    <p><%= `${listing.description.slice(0, 75).trim()}...` %></p>
+                    <p>
+                        $<%= listing.price_per_night %> night
+                        |
+                        $<%= listing.price_per_night * nights %> total
+                    </p>
+                </div>
+            </a>
+        <% }) %>
+    </div>
+<% } else { %>
+    <div class="listings__not-found">
+        <p>No listings found for your search criteria.</p>
+    </div>
+<% } %>

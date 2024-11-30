@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('./includes/head.ejs') %>
+<body>
+<div class="wrapper">
+    <%- include('./includes/header.ejs') %>
+
+    <main>
+        <%- body || '<p>Content not available.</p>' %>
+    </main>
+
+    <%- include('./includes/footer.ejs') %>
+</div>
+<%- include('./includes/scripts.ejs') %>
+</body>
+</html>
