@@ -1,8 +1,8 @@
 import { Router } from 'express';
 import { check, body } from 'express-validator';
 
-import AuthenticationController from '../controllers/authentication.js';
-import User from '../models/user.js';
+import AuthenticationController from '../controllers/AuthenticationController.js';
+import User from '../models/User.js';
 
 const router = Router();
 

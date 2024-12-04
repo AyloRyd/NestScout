@@ -1,6 +1,6 @@
 import bcrypt from 'bcryptjs';
 import { validationResult } from "express-validator";
-import User from '../models/user.js';
+import User from '../models/User.js';
 
 class UsersController {
     static async getEditPage(req, res) {

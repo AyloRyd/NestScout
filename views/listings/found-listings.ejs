@@ -1,0 +1,45 @@
+<div class="found-listings__header">
+    <p class="found-listings__header__title">
+        <%= title.split(' | ')[1] === 'Saved listings'
+                ? `${listings.length} saved listings`
+                : `${listings.length} places in ${title.split(' | ')[1]}` %>
+    </p>
+    <button class="active border found-listings__header__filter-button">
+        <i>tune</i>
+    </button>
+</div>
+
+<% if (listings.length > 0) { %>
+    <div class="found-listings">
+        <% listings.forEach(listing => { %>
+            <a class="found-listings__item"
+               href="/listings/<%= listing.id %>?nights=<%= nights %>&check_in=<%= check_in %>&check_out=<%= check_out %>&guests_count=<%= guests_count %>">
+                <img src="/images/no-image.jpg" alt="Listing image" class="found-listing__image">
+                <div class="found-listing__info">
+                    <p class="font-size-20">
+                        <%= listing.title.length > 23 ? `${listing.title.slice(0, 23).trim()}...` : listing.title %>
+                    </p>
+                    <p>
+                        <%= listing.description.length > 60 ? `${listing.description.slice(0, 60).trim()}...` : listing.description %>
+                    </p>
+                    <p class="font-size-16">
+                        <span class="font-weight-bold">$<%= listing.price_per_night %></span> night
+                        <% if (title.split(' | ')[1] !== 'Saved listings') { %>
+                            &middot;
+                            <% const totalPrice = listing.price_per_night * nights %>
+                            <span
+                                  class="found-listings__info__total-price"
+                                  title="$<%= listing.price_per_night %> × <%= nights %> nights = $<%= totalPrice %>">
+                                <span class="font-weight-bold">$<%= totalPrice %></span> total
+                            </span>
+                        <% } %>
+                    </p>
+                </div>
+            </a>
+        <% }) %>
+    </div>
+<% } else { %>
+    <div class="found-listings__not-found">
+        <p>No listings found for your search criteria.</p>
+    </div>
+<% } %>

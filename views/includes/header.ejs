@@ -1,8 +1,8 @@
 <header>
-    <nav class="navbar jc-sb">
+    <nav class="navbar space-between">
         <div class="centred">
             <a href="/">
-                <i class="large-icon">home</i>
+                <i class="home-icon">home</i>
                 <span class="navbar__site-name">NestScout</span>
             </a>
         </div>
@@ -15,7 +15,7 @@
 <!--            <i class="medium-icon">bar_chart</i>-->
 <!--        </div>-->
 
-        <div class="jc-sb">
+        <div class="space-between">
             <% if (!isAuthenticated) { %>
                 <a href="/authentication/login" class="navbar__login">
                     <button class="border button_large-font">
@@ -29,9 +29,10 @@
                 </a>
             <% } else { %>
                     <button class="active border user__options-button">
-                        <span>
+                        <i class="medium-icon">person</i>
+                        <span class="user__options-button__name">
                             <% const fullName = user.firstName + ' ' + user.lastName; %>
-                            <%= `${fullName.length > 15 ? fullName.slice(0, 15).trim() + '...' : fullName}` %>
+                            <%= `${fullName.length > 20 ? fullName.slice(0, 20).trim() + '...' : fullName}` %>
                         </span>
                         <i>keyboard_arrow_down</i>
                         <menu class="no-wrap">
@@ -42,6 +43,10 @@
                             <a class="row" href="">
                                 <i>person</i>
                                 <span>My profile</span>
+                            </a>
+                            <a class="row" href="/saved-listings/all-listings/<%= user.id %>">
+                                <i>favorite</i>
+                                <span>Saved listings</span>
                             </a>
                             <a class="row" href="">
                                 <i>bar_chart</i>

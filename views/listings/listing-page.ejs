@@ -1,0 +1,126 @@
+<div class="listing-page-container">
+    <div class="row space-between">
+        <p class="listing-title"><%= listing.title %> | <%= listing.city %></p>
+        <a class="listing-page__copy-container">
+            <span>Copy listing URL</span>
+            <i>content_copy</i>
+        </a>
+    </div>
+
+    <div class="row space-between listings-page__second-row">
+        <div class="carousel-container">
+            <div class="carousel">
+                <div class="carousel-images">
+                    <% for (let i = 0; i < 5; i++) { %>
+                        <img src="/images/no-image.jpg" alt="">
+                    <% } %>
+                </div>
+                <button class="carousel-btn carousel-btn-prev">
+                    <i class="arrow-back">arrow_forward_ios</i>
+                </button>
+                <button class="carousel-btn carousel-btn-next">
+                    <i>arrow_forward_ios</i>
+                </button>
+            </div>
+            <div class="carousel-indicators">
+                <% for (let i = 0; i < 5; i++) { %>
+                    <div class="carousel-indicator <%= (i === 0) ? 'active' : ''%>"></div>
+                <% } %>
+            </div>
+        </div>
+
+        <div class="listings-page__right-side-container">
+            <div class="listings-page__right-side-container__rate-and-favorite">
+                <div class="centred">
+                    <i>star</i>
+                    <span><%= listing.rating %> • <a class="listings-page__right-side-container__reviews-link">10 reviews</a></span>
+                </div>
+                <div class="centred">
+                    <i id="favorite-icon" class="favorite-icon <%= isSaved ? 'saved' : '' %>">
+                        <%= isSaved ? 'favorite_border' : 'favorite' %>
+                    </i>
+                </div>
+            </div>
+
+            <article class="border round listing-page__booking-container">
+                <h5>$<%= listing.price_per_night %> night</h5>
+                <form action="/bookings/book" method="POST" class="listing-page__booking-form">
+                    <div class="row">
+                        <div class="field border round label">
+                            <input type="date" id="check_in" name="check_in" value="<%= check_in %>" required>
+                            <label for="check_in">Check-in</label>
+                        </div>
+
+                        <div class="field border round label">
+                            <input type="date" id="check_out" name="check_out" value="<%= check_out %>" required>
+                            <label for="check_out">Check-out</label>
+                        </div>
+                    </div>
+                    <div class="field border round label">
+                        <input type="number" id="guests_count" name="guests_count" min="1" value="<%= guests_count %>" required>
+                        <label for="guests_count">Number of guests</label>
+                    </div>
+
+                    <hr>
+
+                    <div class="row space-between">
+                        <p id="total-price" class="font-size-20">$<%= listing.price_per_night * nights %> total</p>
+                        <button type="submit">Book</button>
+                    </div>
+                </form>
+            </article>
+        </div>
+    </div>
+
+    <div class="listings-page__bottom-container">
+        <p class="font-size-20 text-justify listings-page__bottom-container__title">
+            <%= listing.description %> Lorem ipsum dolor sit amet, consectetur adipisicing elit. <br><br>
+            Ab dignissimos ex exercitationem in, molestias optio temporibus.
+            Deserunt eius eveniet nam sit sunt tempore temporibus vitae.
+            Consequatur labore magni voluptas voluptate. <br><br>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+            Aliquam architecto earum esse eveniet hic illo mollitia natus, quam quibusdam ratione, recusandae voluptate?
+            Aspernatur cum deleniti dolores, exercitationem nesciunt quasi velit.
+        </p>
+        <div class="listings-page__bottom-container__amenities">
+            <% amenitiesFullList.forEach(amenity => { %>
+                <% const isMissing = !listing.amenities.some(fullAmenity => fullAmenity.name === amenity.name); %>
+                <div class="amenity <%= isMissing ? 'line-through' : '' %>">
+                    <i><%= amenity.icon_name %></i>
+                    <span><%= amenity.name %></span>
+                </div>
+            <% }) %>
+        </div>
+    </div>
+</div>
+
+<div id="user-data"
+     data-user-id="<%= user.id %>"></div>
+<div id="listing-data"
+     data-listing-id="<%= listing.id %>"
+     data-listing-price_per_night="<%= listing.price_per_night %>"></div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const pricePerNight = document.getElementById('listing-data').getAttribute('data-listing-price_per_night');
+        const totalPriceElement = document.getElementById('total-price');
+        const checkInInput = document.getElementById('check_in');
+        const checkOutInput = document.getElementById('check_out');
+
+        function calculateTotalPrice() {
+            const checkInDate = new Date(checkInInput.value);
+            const checkOutDate = new Date(checkOutInput.value);
+
+            const nights = (checkOutDate - checkInDate) / (1000 * 60 * 60 * 24);
+
+            if (nights > 0) {
+                totalPriceElement.textContent = `$${(pricePerNight * nights).toFixed(2)} total`;
+            } else {
+                totalPriceElement.textContent = '$0 total';
+            }
+        }
+
+        checkInInput.addEventListener('change', calculateTotalPrice);
+        checkOutInput.addEventListener('change', calculateTotalPrice);
+    });
+</script>

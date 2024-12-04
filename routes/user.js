@@ -1,14 +1,14 @@
 import { Router } from 'express';
 import { body } from 'express-validator';
 
-import UserController from '../controllers/user.js';
-import User from '../models/user.js';
+import UserController from '../controllers/UserController.js';
+import User from '../models/User.js';
 
 const router = Router();
 
 router.get('/edit', UserController.getEditPage);
 
-router.post(
+router.put(
     '/edit',
     [
         body('email')
@@ -56,7 +56,7 @@ router.post(
 
 router.get('/delete', UserController.getDeletePage);
 
-router.post(
+router.delete(
     '/delete',
     [
         body('password')
