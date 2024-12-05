@@ -1,0 +1,102 @@
+<div class="listing-crating-container">
+    <h3 class="form-title"><%= title.split(' | ')[1]%></h3>
+
+    <form action="/listings/edit/<%= listing.id %>" method="POST" class="listing-create-form grid-row-gap">
+
+        <div class="field border label grid-span-3-6">
+            <input type="text" id="title" name="title" value="<%= listing.title %>" minlength="4" required>
+            <label for="title">Title</label>
+        </div>
+
+        <div class="field border label grid-span-3-6">
+            <input type="number" id="price_per_night" name="price_per_night" value="<%= listing.price_per_night %>" min="0" step="0.01" required>
+            <label for="price_per_night">Price per night (dollars)</label>
+        </div>
+
+        <div class="field border label textarea grid-span-6-6 description-container">
+            <textarea id="description" name="description" rows="5" minlength="50"><%= listing.description %></textarea>
+            <label for="description">Description (optional)</label>
+        </div>
+
+        <div class="field border label grid-span-2-6">
+            <input type="text" id="country" name="country" value="<%= listing.country %>" minlength="3" readonly required>
+            <label for="country">Country</label>
+            <span class="helper">You can not change this field</span>
+        </div>
+
+        <div class="field border label grid-span-2-6">
+            <input type="text" id="city" name="city" value="<%= listing.city %>" readonly required>
+            <label for="city">City</label>
+            <span class="helper">You can not change this field</span>
+        </div>
+
+        <div class="field border label grid-span-2-6">
+            <input type="text" id="postal_code" name="postal_code" value="<%= listing.postal_code %>" readonly required>
+            <label for="postal_code">Postal code</label>
+            <span class="helper">You can not change this field</span>
+        </div>
+
+        <div class="field border label grid-span-3-6">
+            <input type="text" id="street" name="street" value="<%= listing.street %>" minlength="4" readonly required>
+            <label for="street">Street</label>
+            <span class="helper">You can not change this field</span>
+        </div>
+
+        <div class="field border label grid-span-3-6">
+            <input type="text" id="house_number" name="house_number" value="<%= listing.house_number %>" readonly>
+            <label for="house_number">House number (optional)</label>
+            <span class="helper">You can not change this field</span>
+        </div>
+
+        <div class="field border label grid-span-2-6">
+            <select id="property_type" name="property_type" required>
+                <option value="apartment" <%= listing.property_type === 'apartment' ? 'selected' : '' %>>Apartment</option>
+                <option value="house" <%= listing.property_type === 'house' ? 'selected' : '' %>>House</option>
+                <option value="room" <%= listing.property_type === 'room' ? 'selected' : '' %>>Room</option>
+            </select>
+            <label for="property_type">Property type</label>
+        </div>
+
+        <div class="field border label grid-span-2-6">
+            <input type="number" id="etage" name="etage" value="<%= listing.etage %>" min="0" readonly>
+            <label for="etage">Floor (optional)</label>
+            <span class="helper">You can not change this field</span>
+        </div>
+
+        <div class="field border label grid-span-2-6">
+            <input type="number" id="area" name="area" value="<%= listing.area %>" min="0" step="0.01" readonly>
+            <label for="area">Area (optional, m²)</label>
+            <span class="helper">You can not change this field</span>
+        </div>
+
+        <div class="field border label grid-span-2-6">
+            <input type="text" id="rooms_count" name="rooms_count" value="<%= listing.rooms_count %>" min="1" required>
+            <label for="rooms_count">Rooms count</label>
+        </div>
+
+        <div class="field border label grid-span-2-6">
+            <input type="number" id="beds_count" name="beds_count" value="<%= listing.beds_count %>" min="1" required>
+            <label for="beds_count">Beds count</label>
+        </div>
+
+        <div class="field border label grid-span-2-6">
+            <input type="number" id="maximum_guests" name="maximum_guests" value="<%= listing.maximum_guests %>" min="1" required>
+            <label for="maximum_guests">Maximum guests</label>
+        </div>
+
+        <fieldset class="amenities-container grid grid-span-6-6">
+            <legend>Select amenities</legend>
+            <% amenities.forEach(amenity => { %>
+                <button
+                        class="chip amenity <%= listingAmenityIds.includes(amenity.id) ? 'fill' : '' %>"
+                        type="button"
+                        data-amenity-id="<%= amenity.id %>">
+                    <i class="primary-text"><%= amenity.icon_name %></i>
+                    <span><%= amenity.name %></span>
+                </button>
+            <% }) %>
+        </fieldset>
+
+        <button type="submit" class="listing-create__submit-button">Save changes</button>
+    </form>
+</div>

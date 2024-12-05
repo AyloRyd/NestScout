@@ -193,7 +193,7 @@ footer {
   text-align: start
 }
 
-.auth__title {
+.form-title {
   margin-bottom: 1rem;
 }
 
@@ -367,7 +367,7 @@ footer {
   max-width: 550px;
 }
 
-.amenity {
+.listing-page__amenity {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -403,4 +403,78 @@ footer {
 
 .favorite-icon.saved {
   color: #ff6347;
+}
+
+.amenities-container {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  border-radius: 20px;
+  padding: 1.5rem;
+  border: 1px solid #7a8285;
+}
+
+.amenity {
+  display: flex;
+  justify-content: start;
+  padding: 1rem 1.5rem;
+  gap: 1.2rem;
+  height: 4rem;
+  width: 10rem;
+  text-align: start;
+  border-radius: 18px;
+  border: 1px solid #7a8285;
+}
+
+.description-container {
+  height: 10rem;
+}
+
+#description {
+  height: 10rem;
+}
+
+select option {
+  height: 100%;
+}
+
+.listing-crating-container {
+  padding: 20px 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.listing-crating-container .form-title {
+  margin-bottom: 0;
+}
+
+.listing-create-form {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-column-gap: 1rem;
+  grid-row-gap: 1.5rem;
+  padding: 3rem;
+  border: 1px solid #7a8285;
+  border-radius: 24px;
+}
+
+.grid-row-gap {
+  grid-row-gap: 2.5rem;
+}
+
+.listing-create-form input,
+.listing-create-form select,
+.listing-create-form textarea {
+  border-radius: 16px;
+}
+
+.grid-span-1-6 { grid-column: span 1; margin: 0 }
+.grid-span-2-6 { grid-column: span 2; margin: 0 }
+.grid-span-3-6 { grid-column: span 3; margin: 0 }
+.grid-span-6-6 { grid-column: span 6; margin: 0 }
+
+.listing-create__submit-button {
+  grid-column: 3/5;
+  margin: 0;
+  height: 3rem;
 }

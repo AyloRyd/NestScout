@@ -64,7 +64,9 @@
                     <hr>
 
                     <div class="row space-between">
-                        <p id="total-price" class="font-size-20">$<%= listing.price_per_night * nights %> total</p>
+                        <p id="total-price" class="font-size-20">
+                            $<%= Number.isNaN(listing.price_per_night * nights) ? 0 : listing.price_per_night * nights %> total
+                        </p>
                         <button type="submit">Book</button>
                     </div>
                 </form>
@@ -84,8 +86,8 @@
         </p>
         <div class="listings-page__bottom-container__amenities">
             <% amenitiesFullList.forEach(amenity => { %>
-                <% const isMissing = !listing.amenities.some(fullAmenity => fullAmenity.name === amenity.name); %>
-                <div class="amenity <%= isMissing ? 'line-through' : '' %>">
+                <% const isMissing = !listing.amenities.includes(amenity.id); %>
+                <div class="listing-page__amenity <%= isMissing ? 'line-through' : '' %>">
                     <i><%= amenity.icon_name %></i>
                     <span><%= amenity.name %></span>
                 </div>

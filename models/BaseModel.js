@@ -10,8 +10,10 @@ class BaseModel {
         const placeholders = keys.map(() => '?').join(', ');
 
         const sql = `INSERT INTO ${this.table} (${keys.join(', ')}) VALUES (${placeholders})`;
+
         const [result] = await this.db.query(sql, values);
-        return result;
+        const insertedId = result.insertId;
+        return { id: insertedId, ...data };
     }
 
     static async read(where = {}) {

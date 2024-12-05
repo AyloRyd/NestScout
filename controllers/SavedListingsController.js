@@ -32,8 +32,7 @@ class SavedListingsController {
         const { userId } = req.params;
 
         try {
-            const savedEntries = await SavedListing.read({ user_id: userId });
-            const listings = await SavedListing.fetchListingsBySavedEntries(savedEntries);
+            const listings = await SavedListing.getSavedListingsByUserId(userId);
             res.render('listings/found-listings', {
                 title: `NestScout | Saved listings`,
                 listings,
