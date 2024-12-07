@@ -1,0 +1,87 @@
+<div class="saved-search-container listing-crating-container">
+    <h3 class="form-title">Filter and sort</h3>
+
+    <form action="/listings/search" method="GET" class="filter-form listing-create-form">
+        <div class="field border label grid-span-2-6">
+            <input type="text" id="city" name="city" value="<%= city %>" minlength="3">
+            <label for="city">City</label>
+        </div>
+
+        <div class="field border label grid-span-2-6">
+            <input type="date" id="check_in" value="<%= check_in %>" name="check_in">
+            <label for="check_in">Check-in date</label>
+        </div>
+
+        <div class="field border label grid-span-2-6">
+            <input type="date" id="check_out" value="<%= check_out %>" name="check_out">
+            <label for="check_out">Check-out date</label>
+        </div>
+
+        <div class="field border label grid-span-1-6">
+            <select id="property_type" name="property_type">
+                <option value="">Any</option>
+                <option value="apartment" <%= property_type === 'apartment' ? 'selected' : '' %>>Apartment</option>
+                <option value="house" <%= property_type === 'house' ? 'selected' : '' %>>House</option>
+                <option value="room" <%= property_type === 'room' ? 'selected' : '' %>>Room</option>
+            </select>
+            <label for="property_type">Property type</label>
+        </div>
+
+        <div class="field border label grid-span-1-6">
+            <input type="number" id="guests_count" name="guests_count" value="<%= guests_count %>" min="1">
+            <label for="guests_count">Guests count</label>
+        </div>
+
+        <div class="field border label grid-span-1-6">
+            <input type="number" id="rooms_count_from" name="rooms_count_from" value="<%= rooms_count_from %>" min="1">
+            <label for="rooms_count_from">Rooms (from)</label>
+        </div>
+
+        <div class="field border label grid-span-1-6">
+            <input type="number" id="rooms_count_up_to" name="rooms_count_up_to" value="<%= rooms_count_up_to %>" min="1">
+            <label for="rooms_count_up_to">Rooms (up to)</label>
+        </div>
+
+        <div class="field border label grid-span-1-6">
+            <input type="number" id="beds_count_from" name="beds_count_from" value="<%= beds_count_from %>" min="1">
+            <label for="beds_count_from">Beds (from)</label>
+        </div>
+
+        <div class="field border label grid-span-1-6">
+            <input type="number" id="beds_count_up_to" name="beds_count_up_to" value="<%= beds_count_up_to %>" min="1">
+            <label for="beds_count_up_to">Beds (up to)</label>
+        </div>
+
+        <div class="field border label grid-span-2-6">
+            <input type="number" id="price_per_night_from" name="price_per_night_from" value="<%= price_per_night_from %>" min="0" step="0.01">
+            <label for="price_per_night_from">Price per night (from)</label>
+        </div>
+
+        <div class="field border label grid-span-2-6">
+            <input type="number" id="price_per_night_up_to" name="price_per_night_up_to" value="<%= price_per_night_up_to %>" min="0" step="0.01">
+            <label for="price_per_night_up_to">Price per night (up to)</label>
+        </div>
+
+        <div class="field border label grid-span-2-6">
+            <select id="sort_order" name="sort_order">
+                <option value="by creation date" <%= sort_order === 'by creation date' ? 'selected' : '' %>>By creation date</option>
+                <option value="by price ascending" <%= sort_order === 'by price ascending' ? 'selected' : '' %>>By price (ascending)</option>
+                <option value="by price descending" <%= sort_order === 'by price descending' ? 'selected' : '' %>>By price (descending)</option>
+                <option value="by rating" <%= sort_order === 'by rating' ? 'selected' : '' %>>By rating</option>
+            </select>
+            <label for="sort_order">Sort by</label>
+        </div>
+
+        <fieldset class="amenities-container grid grid-span-6-6">
+            <legend>Select amenities</legend>
+            <% allAmenities.forEach(amenity => { %>
+                <button class="chip amenity <%= selectedAmenities.includes(String(amenity.id)) ? 'fill' : '' %>" type="button" data-amenity-id="<%= amenity.id %>">
+                    <i class="primary-text"><%= amenity.icon_name %></i>
+                    <span><%= amenity.name %></span>
+                </button>
+            <% }) %>
+        </fieldset>
+
+        <button type="submit" class="filter__submit-button listing-create__submit-button">Apply filters</button>
+    </form>
+</div>

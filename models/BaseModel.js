@@ -16,7 +16,7 @@ class BaseModel {
         return { id: insertedId, ...data };
     }
 
-    static async read(where = {}) {
+    static async read(where = {}, limit = null, orderBy = null) {
         let sql = `SELECT * FROM ${this.table}`;
         const values = [];
 
@@ -26,6 +26,15 @@ class BaseModel {
                 .join(' AND ');
             sql += ` WHERE ${whereClauses}`;
             values.push(...Object.values(where));
+        }
+
+        if (orderBy) {
+            sql += ` ORDER BY ${orderBy}`;
+        }
+
+        if (limit) {
+            sql += ` LIMIT ?`;
+            values.push(limit);
         }
 
         const [rows] = await this.db.query(sql, values);

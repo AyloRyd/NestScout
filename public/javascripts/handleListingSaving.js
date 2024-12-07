@@ -7,7 +7,7 @@ export function handleListingSaving() {
     favoriteIcon.addEventListener('click', async () => {
         try {
             if (isSaved) {
-                const response = await axios.delete('/saved-listings/remove', {
+                const response = await axios.delete('/listings/saved-listings/remove', {
                     data: {
                         userId: userId,
                         listingId: listingId,
@@ -19,7 +19,7 @@ export function handleListingSaving() {
                 favoriteIcon.textContent = 'favorite';
                 isSaved = false;
             } else {
-                const response = await axios.post('/saved-listings/save', {
+                const response = await axios.post('/listings/save', {
                     userId: userId,
                     listingId: listingId,
                 });

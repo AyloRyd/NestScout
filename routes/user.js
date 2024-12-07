@@ -8,7 +8,7 @@ const router = Router();
 
 router.get('/edit', UserController.getEditPage);
 
-router.put(
+router.post(
     '/edit',
     [
         body('email')

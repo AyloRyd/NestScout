@@ -1,11 +1,9 @@
 import { Router } from 'express';
+
+import IndexController from '../controllers/IndexController.js';
+
 const router = Router();
 
-router.get('/', function(req, res, next) {
-  res.render('index', {
-    layout: 'layout',
-    title: 'NestScout | Find your nest now!'
-  });
-});
+router.get('/', IndexController.getIndexPage);
 
 export default router;

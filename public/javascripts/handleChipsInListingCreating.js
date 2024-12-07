@@ -21,14 +21,14 @@ export function handleChipsInListingCreating() {
             }
         });
 
-        const existingAmenitiesInput = form.querySelector('input[name="amenities[]"]');
+        const existingAmenitiesInput = form.querySelector('input[name="amenities"]');
         if (existingAmenitiesInput) {
             existingAmenitiesInput.remove();
         }
 
         const amenitiesInput = document.createElement('input');
         amenitiesInput.type = 'hidden';
-        amenitiesInput.name = 'amenities[]';
+        amenitiesInput.name = 'amenities';
         amenitiesInput.value = selectedAmenities.join(',');
 
         form.appendChild(amenitiesInput);

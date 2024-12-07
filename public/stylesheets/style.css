@@ -126,6 +126,12 @@ footer {
   height: fit-content;
 }
 
+.bigger-icon {
+  font-size: 32px;
+  width: fit-content;
+  height: fit-content;
+}
+
 .cursor-pointer {
   cursor: pointer;
 }
@@ -153,6 +159,10 @@ footer {
 
 .main__container {
   margin-top: 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
 }
 
 .main__container__form {
@@ -258,6 +268,26 @@ footer {
 .found-listings__header__filter-button {
   width: 5rem;
   height: 3.5rem;
+  border-radius: 20px;
+}
+
+.filters-applied {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  font-size: 12px;
+  width: fit-content;
+}
+
+.filters-applied p {
+  width: 4.5rem;
+  text-align: right;
+}
+
+.found-listings__not-found {
+  display: flex;
+  padding: 20px 80px;
+  font-size: 24px;
 }
 
 .listing-page-container {
@@ -477,4 +507,20 @@ select option {
   grid-column: 3/5;
   margin: 0;
   height: 3rem;
+}
+
+.saved-searches-container {
+  width: fit-content;
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.saved-search {
+  display: flex;
+  gap: 2rem;
+  padding: 3.5rem 2rem;
+  height: 7rem;
+  border-radius: 20px;
 }

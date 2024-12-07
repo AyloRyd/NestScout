@@ -2,24 +2,134 @@ import Listing from '../models/Listing.js';
 import Amenity from '../models/Amenity.js';
 import SavedListing from '../models/SavedListing.js';
 import ListingAmenities from '../models/ListingAmenities.js';
+import SavedSearch from '../models/SavedSearch.js';
+import SavedSearchAmenities from "../models/SavedSearchAmenities.js";
 
 class ListingsController {
     static async search(req, res) {
         try {
-            const { city, check_in, check_out, guests_count } = req.query;
+            const {
+                city,
+                check_in,
+                check_out,
+                guests_count,
+                amenities,
+                property_type,
+                rooms_count_from,
+                rooms_count_up_to,
+                beds_count_from,
+                beds_count_up_to,
+                price_per_night_from,
+                price_per_night_up_to,
+                sort_order
+            } = req.query;
+
             if (!city || !check_in || !check_out || !guests_count) {
                 return res.status(400).send('Missing required search parameters.');
             }
 
-            const listings = await Listing.search(city, check_in, check_out, guests_count);
-            const nights = (new Date(check_out) - new Date(check_in)) / (1000 * 60 * 60 * 24);
-            res.render('listings/found-listings', {
-                title: `NestScout | ${city}`,
-                listings,
+            const listings = await Listing.search({
+                city,
                 check_in,
                 check_out,
-                nights,
-                guests_count
+                guests_count,
+                amenities: amenities ? amenities.split(',').map(id => parseInt(id)) : [],
+                property_type,
+                rooms_count_from,
+                rooms_count_up_to,
+                beds_count_from,
+                beds_count_up_to,
+                price_per_night_from,
+                price_per_night_up_to,
+                sort_order
+            });
+
+            if (req.session.isLoggedIn) {
+                const user_id = req.session.user.id;
+
+                const lastSavedSearches = await SavedSearch.read({ user_id }, 3, 'created_at DESC');
+
+                const savedSearchData = {
+                    user_id,
+                    city,
+                    check_in,
+                    check_out,
+                    guests_count,
+                    property_type: property_type || null,
+                    rooms_count_from: rooms_count_from || null,
+                    rooms_count_up_to: rooms_count_up_to || null,
+                    beds_count_from: beds_count_from || null,
+                    beds_count_up_to: beds_count_up_to || null,
+                    price_per_night_from: price_per_night_from || null,
+                    price_per_night_up_to: price_per_night_up_to || null,
+                    sort_order: sort_order || 'by creation date',
+                    created_at: new Date()
+                };
+
+                const matchingSearch = lastSavedSearches.find(search =>
+                    search.city === city &&
+                    search.check_in.toLocaleDateString('en-CA') === check_in &&
+                    search.check_out.toLocaleDateString('en-CA') === check_out
+                );
+
+                if (matchingSearch) {
+                    await SavedSearch.update(savedSearchData, { id: matchingSearch.id });
+
+                    await SavedSearchAmenities.delete({ saved_search_id: matchingSearch.id });
+
+                    if (amenities && amenities.length > 0) {
+                        for (const amenityId of amenities.split(',').map(id => parseInt(id))) {
+                            await SavedSearchAmenities.create({
+                                saved_search_id: matchingSearch.id,
+                                amenity_id: amenityId
+                            });
+                        }
+                    }
+                } else {
+                    const newSavedSearch = await SavedSearch.create(savedSearchData);
+
+                    if (amenities && amenities.length > 0) {
+                        for (const amenityId of amenities.split(',').map(id => parseInt(id))) {
+                            await SavedSearchAmenities.create({
+                                saved_search_id: newSavedSearch.id,
+                                amenity_id: amenityId
+                            });
+                        }
+                    }
+                }
+            }
+
+            const additionalFiltersApplied = !!(
+                amenities ||
+                property_type ||
+                rooms_count_from ||
+                rooms_count_up_to ||
+                beds_count_from ||
+                beds_count_up_to ||
+                price_per_night_from ||
+                price_per_night_up_to ||
+                sort_order
+            );
+
+            res.render('listings/found-listings', {
+                title: `NestScout | ${city}`,
+                showFilterButton: true,
+                listings,
+                city,
+                check_in,
+                check_out,
+                guests_count,
+                amenities: amenities ? amenities.split(',').map(id => parseInt(id)) : [],
+                property_type,
+                rooms_count_from,
+                rooms_count_up_to,
+                beds_count_from,
+                beds_count_up_to,
+                price_per_night_from,
+                price_per_night_up_to,
+                sort_order,
+                nights: (new Date(check_out) - new Date(check_in)) / (1000 * 60 * 60 * 24),
+                additionalFiltersApplied,
             });
         } catch (error) {
             console.error('Error in ListingsController.search:', error);
@@ -68,7 +178,7 @@ class ListingsController {
     static async createListing(req, res) {
         const { title, description, price_per_night, country, city, postal_code, street, house_number, property_type, etage, area, rooms_count, beds_count, maximum_guests } = req.body;
 
-        const amenities = req.body['amenities[]'] ? req.body['amenities[]'].split(',').map(id => parseInt(id)) : [];
+        const amenities = req.body.amenities ? req.body.amenities.split(',').map(id => parseInt(id)) : [];
 
         try {
             const newListing = await Listing.create({
@@ -133,7 +243,7 @@ class ListingsController {
             const { id } = req.params;
             const { title, description, price_per_night, rooms_count, beds_count, maximum_guests } = req.body;
 
-            const amenities = req.body['amenities[]'] ? req.body['amenities[]'].split(',').map(id => parseInt(id)) : [];
+            const amenities = req.body.amenities ? req.body.amenities.split(',').map(id => parseInt(id)) : [];
 
             const updatedData = {
                 title,

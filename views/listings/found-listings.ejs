@@ -4,9 +4,35 @@
                 ? `${listings.length} saved listings`
                 : `${listings.length} places in ${title.split(' | ')[1]}` %>
     </p>
-    <button class="active border found-listings__header__filter-button">
-        <i>tune</i>
-    </button>
+    <% if (typeof showFilterButton !== 'undefined' && showFilterButton !== null && showFilterButton) { %>
+        <div class="row">
+<!--            <% if (additionalFiltersApplied) { %>-->
+<!--                <div class="filters-applied">-->
+<!--                    <p>Some filters applied</p>-->
+<!--                </div>-->
+<!--            <% } %>-->
+            <a
+                    href="/listings/filter?<%= new URLSearchParams({
+                city,
+                check_in,
+                check_out,
+                guests_count,
+                property_type: typeof property_type !== 'undefined' ? property_type : '',
+                rooms_count_from: typeof rooms_count_from !== 'undefined' ? rooms_count_from : '',
+                rooms_count_up_to: typeof rooms_count_up_to !== 'undefined' ? rooms_count_up_to : '',
+                beds_count_from: typeof beds_count_from !== 'undefined' ? beds_count_from : '',
+                beds_count_up_to: typeof beds_count_up_to !== 'undefined' ? beds_count_up_to : '',
+                price_per_night_from: typeof price_per_night_from !== 'undefined' ? price_per_night_from : '',
+                price_per_night_up_to: typeof price_per_night_up_to !== 'undefined' ? price_per_night_up_to : '',
+                sort_order: typeof sort_order !== 'undefined' ? sort_order : '',
+                amenities: typeof amenities !== 'undefined' ? amenities : ''
+            }).toString() %>">
+                <button class="<%= additionalFiltersApplied ? 'fill' : '' %> chip active border found-listings__header__filter-button">
+                    <i>tune</i>
+                </button>
+            </a>
+        </div>
+    <% } %>
 </div>
 
 <% if (listings.length > 0) { %>
@@ -22,6 +48,7 @@
                     <p>
                         <%= listing.description.length > 60 ? `${listing.description.slice(0, 60).trim()}...` : listing.description %>
                     </p>
+                    <p>Maximum guests: <%= listing.maximum_guests %></p>
                     <p class="font-size-16">
                         <span class="font-weight-bold">$<%= listing.price_per_night %></span> night
                         <% if (title.split(' | ')[1] !== 'Saved listings') { %>
