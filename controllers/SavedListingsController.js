@@ -1,7 +1,8 @@
 import SavedListing from '../models/SavedListing.js';
+import Listing from '../models/Listing.js';
 
 class SavedListingsController {
-    static async addSavedListing(req, res, next) {
+    static async addSavedListing(req, res) {
         const { userId, listingId } = req.body;
 
         try {
@@ -13,7 +14,7 @@ class SavedListingsController {
         }
     }
 
-    static async removeSavedListing(req, res, next) {
+    static async removeSavedListing(req, res) {
         const { userId, listingId } = req.body;
 
         try {
@@ -28,11 +29,25 @@ class SavedListingsController {
         }
     }
 
-    static async getSavedListings(req, res, next) {
+    static async getSavedListings(req, res) {
         const { userId } = req.params;
 
         try {
-            const listings = await SavedListing.getSavedListingsByUserId(userId);
+            const savedListings = await SavedListing.read({ user_id: userId });
+
+            const listingIds = savedListings.length > 0
+                ? savedListings.map(savedListing => savedListing.listing_id)
+                : [];
+
+            const listings = listingIds.length > 0
+                ? await Promise.all(
+                    listingIds.map(async id => {
+                        const [listing] = await Listing.read({ id });
+                        return listing;
+                    })
+                ).then(results => results.filter(Boolean))
+                : [];
+
             res.render('listings/found-listings', {
                 title: `NestScout | Saved listings`,
                 listings,
