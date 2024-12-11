@@ -1,9 +1,10 @@
 import Listing from '../models/Listing.js';
+import User from '../models/User.js';
 import Amenity from '../models/Amenity.js';
 import SavedListing from '../models/SavedListing.js';
 import ListingAmenities from '../models/ListingAmenities.js';
-import SavedSearch from '../models/SavedSearch.js';
-import SavedSearchAmenities from "../models/SavedSearchAmenities.js";
+
+import FilterController from './FilterController.js';
 
 class ListingsController {
     static async search(req, res) {
@@ -45,58 +46,7 @@ class ListingsController {
             });
 
             if (req.session.isLoggedIn) {
-                const user_id = req.session.user.id;
-
-                const lastSavedSearches = await SavedSearch.read({ user_id }, 3, 'created_at DESC');
-
-                const savedSearchData = {
-                    user_id,
-                    city,
-                    check_in,
-                    check_out,
-                    guests_count,
-                    property_type: property_type || null,
-                    rooms_count_from: rooms_count_from || null,
-                    rooms_count_up_to: rooms_count_up_to || null,
-                    beds_count_from: beds_count_from || null,
-                    beds_count_up_to: beds_count_up_to || null,
-                    price_per_night_from: price_per_night_from || null,
-                    price_per_night_up_to: price_per_night_up_to || null,
-                    sort_order: sort_order || 'by creation date',
-                    created_at: new Date()
-                };
-
-                const matchingSearch = lastSavedSearches.find(search =>
-                    search.city === city &&
-                    search.check_in.toLocaleDateString('en-CA') === check_in &&
-                    search.check_out.toLocaleDateString('en-CA') === check_out
-                );
-
-                if (matchingSearch) {
-                    await SavedSearch.update(savedSearchData, { id: matchingSearch.id });
-
-                    await SavedSearchAmenities.delete({ saved_search_id: matchingSearch.id });
-
-                    if (amenities && amenities.length > 0) {
-                        for (const amenityId of amenities.split(',').map(id => parseInt(id))) {
-                            await SavedSearchAmenities.create({
-                                saved_search_id: matchingSearch.id,
-                                amenity_id: amenityId
-                            });
-                        }
-                    }
-                } else {
-                    const newSavedSearch = await SavedSearch.create(savedSearchData);
-
-                    if (amenities && amenities.length > 0) {
-                        for (const amenityId of amenities.split(',').map(id => parseInt(id))) {
-                            await SavedSearchAmenities.create({
-                                saved_search_id: newSavedSearch.id,
-                                amenity_id: amenityId
-                            });
-                        }
-                    }
-                }
+                await FilterController.saveFilter(req.session.user.id, req.query);
             }
 
             const additionalFiltersApplied = !!(
@@ -152,9 +102,12 @@ class ListingsController {
                 listing_id: req.params.id,
             });
 
+            const [host] = await User.read({ id: listing.host_id });
+
             res.render('listings/listing-page', {
                 title: `NestScout | ${listing.title}`,
                 listing,
+                host,
                 check_in: req.query.check_in,
                 check_out: req.query.check_out,
                 nights: req.query.nights,
@@ -176,7 +129,7 @@ class ListingsController {
     }
 
     static async createListing(req, res) {
-        const { title, description, price_per_night, country, city, postal_code, street, house_number, property_type, etage, area, rooms_count, beds_count, maximum_guests } = req.body;
+        const { title, description, price_per_night, country, city, postal_code, street, house_number, property_type, floor, area, rooms_count, beds_count, maximum_guests } = req.body;
 
         const amenities = req.body.amenities ? req.body.amenities.split(',').map(id => parseInt(id)) : [];
 
@@ -192,7 +145,7 @@ class ListingsController {
                 street,
                 house_number,
                 property_type,
-                etage: etage === '' ? null : etage,
+                floor: floor === '' ? null : floor,
                 area: area === '' ? null : area,
                 rooms_count,
                 beds_count,

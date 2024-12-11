@@ -32,11 +32,13 @@ class Listing extends BaseModel {
             values.push(guests_count);
         }
         if (check_in && check_out) {
-            whereClauses.push(`NOT EXISTS 
-        (SELECT 1 
-        FROM Bookings booking 
-        WHERE booking.listing_id = listing.id 
-        AND (booking.check_in <= ? AND booking.check_out >= ?))`);
+            whereClauses.push(`
+                NOT EXISTS 
+                    (SELECT 1 
+                    FROM Bookings booking 
+                    WHERE booking.listing_id = listing.id 
+                    AND (booking.check_in <= ? AND booking.check_out >= ?))
+            `);
             values.push(check_in, check_out);
         }
 

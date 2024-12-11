@@ -43,31 +43,35 @@
             </div>
 
             <article class="border round listing-page__booking-container">
-                <h5>$<%= listing.price_per_night %> night</h5>
                 <form action="/bookings/book" method="POST" class="listing-page__booking-form">
-                    <div class="row">
-                        <div class="field border round label">
-                            <input type="date" id="check_in" name="check_in" value="<%= check_in %>" required>
-                            <label for="check_in">Check-in</label>
-                        </div>
+                    <div>
+                        <h5>$<%= listing.price_per_night %> night</h5>
+                        <div class="row">
+                            <div class="field border round label">
+                                <input type="date" id="check_in" name="check_in" value="<%= check_in %>" required>
+                                <label for="check_in">Check-in</label>
+                            </div>
 
-                        <div class="field border round label">
-                            <input type="date" id="check_out" name="check_out" value="<%= check_out %>" required>
-                            <label for="check_out">Check-out</label>
+                            <div class="field border round label">
+                                <input type="date" id="check_out" name="check_out" value="<%= check_out %>" required>
+                                <label for="check_out">Check-out</label>
+                            </div>
                         </div>
-                    </div>
-                    <div class="field border round label">
-                        <input type="number" id="guests_count" name="guests_count" min="1" value="<%= guests_count %>" required>
-                        <label for="guests_count">Number of guests</label>
+                        <div class="field border round label">
+                            <input type="number" id="guests_count" name="guests_count" min="1" value="<%= guests_count %>" required>
+                            <label for="guests_count">Number of guests</label>
+                        </div>
                     </div>
 
                     <hr>
 
-                    <div class="row space-between">
-                        <p id="total-price" class="font-size-20">
-                            $<%= Number.isNaN(listing.price_per_night * nights) ? 0 : listing.price_per_night * nights %> total
-                        </p>
-                        <button type="submit">Book</button>
+                    <div>
+                        <div class="row space-between">
+                            <p id="total-price" class="font-size-20">
+                                $<%= Number.isNaN(listing.price_per_night * nights) ? 0 : listing.price_per_night * nights %> total
+                            </p>
+                            <button type="submit">Book</button>
+                        </div>
                     </div>
                 </form>
             </article>
@@ -75,16 +79,67 @@
     </div>
 
     <div class="listings-page__bottom-container">
-        <p class="font-size-20 text-justify listings-page__bottom-container__title">
-            <%= listing.description %> Lorem ipsum dolor sit amet, consectetur adipisicing elit. <br><br>
-            Ab dignissimos ex exercitationem in, molestias optio temporibus.
-            Deserunt eius eveniet nam sit sunt tempore temporibus vitae.
-            Consequatur labore magni voluptas voluptate. <br><br>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-            Aliquam architecto earum esse eveniet hic illo mollitia natus, quam quibusdam ratione, recusandae voluptate?
-            Aspernatur cum deleniti dolores, exercitationem nesciunt quasi velit.
-        </p>
+        <div>
+            <a class="host-info-container" href="/users/<%= host.id %>">
+                <div class="host__image"><%= host.first_name[0] %></div>
+                <div>
+                    <p>Hosted by:</p>
+                    <p class="font-weight-bold"><%= host.first_name %> <%= host.last_name %></p>
+                </div>
+            </a>
+            <p class="listings-page__bottom-container__description">
+                <%= listing.description %> Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                Ab dignissimos ex exercitationem in, molestias optio temporibus.
+            </p>
+            <p>
+                <i class="bigger-icon">location_on</i>
+                <%= `${listing.street} ${listing.house_number}, ${listing.postal_code} ${listing.city} ` %>
+            </p>
+            <p>
+                <%
+                let propertyIcon = '';
+                switch (listing.property_type) {
+                    case 'house':
+                        propertyIcon = 'house';
+                        break;
+                    case 'apartment':
+                        propertyIcon = 'apartment';
+                        break;
+                    case 'room':
+                        propertyIcon = 'meeting_room';
+                        break;
+                    default:
+                        propertyIcon = 'help';
+                }
+                %>
+                <i class="bigger-icon"><%= propertyIcon %></i>
+                Property type: <%= listing.property_type %>
+            </p>
+            <p>
+                <i class="bigger-icon">open_with</i>
+                Area: <%= listing.area ? `${listing.area} m²` : '—' %>
+            </p>
+            <p>
+                <i class="bigger-icon">floor</i>
+                Floor: <%= listing.floor ? listing.floor : '—' %>
+            </p>
+            <% if (listing.property_type !== 'room') { %>
+                <p>
+                    <i class="bigger-icon">meeting_room</i>
+                    Rooms: <%= listing.rooms_count %>
+                </p>
+            <% } %>
+            <p>
+                <i class="bigger-icon">bed</i>
+                Beds: <%= listing.beds_count %>
+            </p>
+            <p>
+                <i class="bigger-icon">group</i>
+                Maximum guests: <%= listing.maximum_guests %>
+            </p>
+        </div>
         <div class="listings-page__bottom-container__amenities">
+            <p class="font-weight-bold included-amenities">Included amenities:</p>
             <% amenitiesFullList.forEach(amenity => { %>
                 <% const isMissing = !listing.amenities.includes(amenity.id); %>
                 <div class="listing-page__amenity <%= isMissing ? 'line-through' : '' %>">
@@ -101,28 +156,3 @@
 <div id="listing-data"
      data-listing-id="<%= listing.id %>"
      data-listing-price_per_night="<%= listing.price_per_night %>"></div>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const pricePerNight = document.getElementById('listing-data').getAttribute('data-listing-price_per_night');
-        const totalPriceElement = document.getElementById('total-price');
-        const checkInInput = document.getElementById('check_in');
-        const checkOutInput = document.getElementById('check_out');
-
-        function calculateTotalPrice() {
-            const checkInDate = new Date(checkInInput.value);
-            const checkOutDate = new Date(checkOutInput.value);
-
-            const nights = (checkOutDate - checkInDate) / (1000 * 60 * 60 * 24);
-
-            if (nights > 0) {
-                totalPriceElement.textContent = `$${(pricePerNight * nights).toFixed(2)} total`;
-            } else {
-                totalPriceElement.textContent = '$0 total';
-            }
-        }
-
-        checkInInput.addEventListener('change', calculateTotalPrice);
-        checkOutInput.addEventListener('change', calculateTotalPrice);
-    });
-</script>

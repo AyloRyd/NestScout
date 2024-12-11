@@ -7,14 +7,6 @@
             </a>
         </div>
 
-<!--        <div class=navbar__central-menu">-->
-<!--            <i class="medium-icon">person</i>-->
-<!--            <button class="circle extra">-->
-<!--                <i>add</i>-->
-<!--            </button>-->
-<!--            <i class="medium-icon">bar_chart</i>-->
-<!--        </div>-->
-
         <div class="space-between">
             <% if (!isAuthenticated) { %>
                 <a href="/authentication/login" class="navbar__login">
@@ -36,26 +28,26 @@
                         </span>
                         <i>keyboard_arrow_down</i>
                         <menu class="no-wrap">
-                            <a class="row" href="/listings/create">
-                                <i>add_business</i>
-                                <span>Make new listing</span>
-                            </a>
                             <a class="row" href="">
                                 <i>person</i>
                                 <span>My profile</span>
+                            </a>
+                            <a class="row" href="/listings/create">
+                                <i>add_business</i>
+                                <span>Make new listing</span>
                             </a>
                             <a class="row" href="/listings/saved-listings/<%= user.id %>">
                                 <i>favorite</i>
                                 <span>Saved listings</span>
                             </a>
-                            <a class="row" href="">
-                                <i>bar_chart</i>
-                                <span>My statistics</span>
-                            </a>
-                            <a class="row" href="/user/edit">
-                                <i>edit</i>
-                                <span>Edit account</span>
-                            </a>
+<!--                            <a class="row" href="">-->
+<!--                                <i>bar_chart</i>-->
+<!--                                <span>My statistics</span>-->
+<!--                            </a>-->
+<!--                            <a class="row" href="/user/edit">-->
+<!--                                <i>edit</i>-->
+<!--                                <span>Edit account</span>-->
+<!--                            </a>-->
                             <a class="row" href="authentication/logout" onclick="
                                 event.preventDefault();
                                 axios.post('/authentication/logout')
@@ -65,10 +57,10 @@
                                 <i>logout</i>
                                 <span>Log out</span>
                             </a>
-                            <a class="row" href="/user/delete">
-                                <i>delete_forever</i>
-                                <span>Delete account</span>
-                            </a>
+<!--                            <a class="row" href="/user/delete">-->
+<!--                                <i>delete_forever</i>-->
+<!--                                <span>Delete account</span>-->
+<!--                            </a>-->
                         </menu>
                     </button>
                 <% } %>

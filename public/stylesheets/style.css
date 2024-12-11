@@ -49,7 +49,8 @@ html, body {
 
 body {
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-  max-width: 1700px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  max-width: 2000px;
 }
 
 .wrapper {
@@ -68,7 +69,7 @@ header {
 
 footer {
   font-size: 16px;
-  margin-top: 10rem;
+  margin-top: 7rem;
 }
 
 .row {
@@ -298,21 +299,58 @@ footer {
   font-size: 1.7rem;
 }
 
+.host-info-container {
+  width: 62%;
+  background-color: var(--surface-container);
+  height: 7rem;
+  border-radius: 24px;
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 1.5rem;
+}
+
+.host__image {
+  height: 70%;
+  aspect-ratio: 1 / 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 1px solid #7a8285;
+  margin-left: 1.5rem;
+}
+
+.host-info-container p {
+  margin: 0.5rem;
+  font-size: 1rem;
+}
+
+.included-amenities {
+  grid-column: span 2;
+  padding: 2rem 0 2rem 0;
+}
+
 .listing-page__booking-container {
   padding: 2rem;
   align-self: flex-start;
   margin-top: 1.5rem;
 }
 
-.listing-page__booking-container > h5 {
-  margin-bottom: 2rem;
+.listing-page__booking-form {
+  margin-top: 0;
+  max-height: 397px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .listing-page__booking-form input {
   height: 4rem;
 }
 
-.listing-page__booking-form > .field {
+.listing-page__booking-form .field {
   margin-top: 2rem;
 }
 
@@ -329,7 +367,6 @@ footer {
 .listings-page__right-side-container {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   height: 100%;
 }
 
@@ -379,6 +416,11 @@ footer {
 .listings-page__right-side-container__reviews-link {
   color: #aaaaaa;
   text-decoration: underline;
+  transition: color ease 0.2s;
+}
+
+.listings-page__right-side-container__reviews-link:hover {
+  color: white;
 }
 
 .listings-page__bottom-container {
@@ -387,14 +429,23 @@ footer {
   justify-content: space-between;
 }
 
+.listings-page__bottom-container > div > p {
+  font-size: 20px;
+  text-align: justify;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
 .listings-page__bottom-container__amenities {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  column-gap: 2rem;
+  gap: 2rem;
 }
 
-.listings-page__bottom-container__title {
-  max-width: 550px;
+.listings-page__bottom-container__description {
+  max-width: 75%;
+  margin: 0 0 2rem 0;
 }
 
 .listing-page__amenity {
@@ -405,7 +456,7 @@ footer {
   gap: 0.5rem;
   border: 1px solid gray;
   border-radius: 18px;
-  height: 3rem;
+  height: 4rem;
   width: 12.5rem;
   margin: 0;
   padding: 0.5rem 0.5rem 0.5rem 1rem;
@@ -498,10 +549,19 @@ select option {
   border-radius: 16px;
 }
 
+.grid-6-fr {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-column-gap: 2rem;
+  grid-row-gap: 3rem;
+}
+
 .grid-span-1-6 { grid-column: span 1; margin: 0 }
 .grid-span-2-6 { grid-column: span 2; margin: 0 }
 .grid-span-3-6 { grid-column: span 3; margin: 0 }
 .grid-span-6-6 { grid-column: span 6; margin: 0 }
+.grid-span-2-3-6 { grid-column: 2/3; }
+.grid-span-5-6-6 { grid-column: 5/6; }
 
 .listing-create__submit-button {
   grid-column: 3/5;
@@ -519,8 +579,20 @@ select option {
 
 .saved-search {
   display: flex;
+  align-items: center;
   gap: 2rem;
   padding: 3.5rem 2rem;
-  height: 7rem;
+  height: 6rem;
   border-radius: 20px;
+}
+
+.saved-search__city {
+  margin-top: 0;
+  font-size: 1.2rem;
+}
+
+.saved-search__dates {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }

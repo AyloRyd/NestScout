@@ -2,7 +2,7 @@
     <h3 class="form-title"><%= title.split(' | ')[1]%></h3>
 
     <form action="/listings/create" method="POST" class="listing-create-form">
-        <div class="field border label grid-span-3-6">
+    <div class="field border label grid-span-3-6">
             <input type="text" id="title" name="title" minlength="4" required>
             <label for="title">Title</label>
         </div>
@@ -52,8 +52,8 @@
         </div>
 
         <div class="field border label grid-span-2-6">
-            <input type="number" id="etage" name="etage" min="0">
-            <label for="etage">Floor (optional)</label>
+            <input type="number" id="floor" name="floor" min="0">
+            <label for="floor">Floor (optional)</label>
         </div>
 
         <div class="field border label grid-span-2-6">
@@ -85,6 +85,20 @@
                 </button>
             <% }) %>
         </fieldset>
+
+        <div id="drop-area">
+            <input type="file" id="file-input" name="images" accept="image/*" multiple>
+            <label for="file-input">
+                Drag and drop images or click anywhere to upload
+                <br>
+                <span class="secondary-text">(maximum 5)</span>
+            </label>
+            <div id="image-gallery">
+                <div class="upload">
+                    <i class="large-icon">upload</i>
+                </div>
+            </div>
+        </div>
 
         <button type="submit" class="listing-create__submit-button">Create listing</button>
     </form>

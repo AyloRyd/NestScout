@@ -30,13 +30,15 @@
                    href="/listings/search?city=<%= encodeURIComponent(search.city || '') %>&check_in=<%= encodeURIComponent(search.check_in ? search.check_in.toLocaleDateString('en-CA') : '') %>&check_out=<%= encodeURIComponent(search.check_out ? search.check_out.toLocaleDateString('en-CA') : '') %>&property_type=<%= encodeURIComponent(search.property_type || '') %>&guests_count=<%= encodeURIComponent(search.guests_count || '') %>&rooms_count_from=<%= encodeURIComponent(search.rooms_count_from || '') %>&rooms_count_up_to=<%= encodeURIComponent(search.rooms_count_up_to || '') %>&beds_count_from=<%= encodeURIComponent(search.beds_count_from || '') %>&beds_count_up_to=<%= encodeURIComponent(search.beds_count_up_to || '') %>&price_per_night_from=<%= encodeURIComponent(search.price_per_night_from || '') %>&price_per_night_up_to=<%= encodeURIComponent(search.price_per_night_up_to || '') %>&sort_order=<%= encodeURIComponent(search.sort_order || '') %>&amenities=<%= encodeURIComponent((search.amenities && search.amenities.length > 0 ? search.amenities.join(',') : '')) %>">
                     <i class="primary-text bigger-icon">search</i>
                     <div>
-                        <p><%= search.city %></p>
-                        <p>
-                            <%= search.check_in ? search.check_in.toLocaleDateString('uk-UA', { day: '2-digit', month: '2-digit' }) : '' %>
-                            —
-                            <%= search.check_out ? search.check_out.toLocaleDateString('uk-UA', { day: '2-digit', month: '2-digit' }) : '' %>
-                        </p>
-                        <p>Guests: <%= search.guests_count %></p>
+                        <p class="saved-search__city"><%= search.city %></p>
+                        <div class="saved-search__dates">
+                            <span>
+                                <%= search.check_in ? search.check_in.toLocaleDateString('uk-UA', { day: '2-digit', month: '2-digit' }) : '' %>
+                                —
+                                <%= search.check_out ? search.check_out.toLocaleDateString('uk-UA', { day: '2-digit', month: '2-digit' }) : '' %>
+                            </span>
+                            <span>Guests: <%= search.guests_count %></span>
+                        </div>
                     </div>
                 </a>
             <% }) %>
