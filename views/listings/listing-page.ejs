@@ -11,23 +11,34 @@
         <div class="carousel-container">
             <div class="carousel">
                 <div class="carousel-images">
-                    <% for (let i = 0; i < 5; i++) { %>
-                        <img src="/images/no-image.jpg" alt="">
+                    <% if (imagePaths.length > 0) { %>
+                        <% imagePaths.forEach((imagePath, index) => { %>
+                            <img src="<%= imagePath %>" alt="Listing image <%= index + 1 %>" class="<%= index === 0 ? 'active' : '' %>">
+                        <% }); %>
+                    <% } else { %>
+                        <img src="/images/no-image.jpg" alt="No image available">
                     <% } %>
                 </div>
-                <button class="carousel-btn carousel-btn-prev">
-                    <i class="arrow-back">arrow_forward_ios</i>
-                </button>
-                <button class="carousel-btn carousel-btn-next">
-                    <i>arrow_forward_ios</i>
-                </button>
+                <% if (imagePaths.length !== 0) { %>
+                    <button class="carousel-btn carousel-btn-prev">
+                        <i class="arrow-back">arrow_forward_ios</i>
+                    </button>
+                    <button class="carousel-btn carousel-btn-next">
+                        <i>arrow_forward_ios</i>
+                    </button>
+                <% } %>
             </div>
             <div class="carousel-indicators">
-                <% for (let i = 0; i < 5; i++) { %>
-                    <div class="carousel-indicator <%= (i === 0) ? 'active' : ''%>"></div>
+                <% if (imagePaths.length === 0) { %>
+                    <div class="carousel-indicator active"></div>
+                <% } else { %>
+                    <% imagePaths.forEach((_, index) => { %>
+                        <div class="carousel-indicator <%= index === 0 ? 'active' : '' %>"></div>
+                    <% }); %>
                 <% } %>
             </div>
         </div>
+
 
         <div class="listings-page__right-side-container">
             <div class="listings-page__right-side-container__rate-and-favorite">
@@ -47,30 +58,51 @@
                     <div>
                         <h5>$<%= listing.price_per_night %> night</h5>
                         <div class="row">
-                            <div class="field border round label">
+                            <% let dateError = false;
+                            if (typeof validationErrors !== 'undefined') {
+                                dateError = validationErrors.find(err => err.path === 'check_in');
+                            }%>
+                            <div class="field border round label <%= dateError ? 'invalid' : ''%>">
                                 <input type="date" id="check_in" name="check_in" value="<%= check_in %>" required>
                                 <label for="check_in">Check-in</label>
                             </div>
 
-                            <div class="field border round label">
+                            <div class="field border round label <%= dateError ? 'invalid' : ''%>">
                                 <input type="date" id="check_out" name="check_out" value="<%= check_out %>" required>
                                 <label for="check_out">Check-out</label>
                             </div>
                         </div>
-                        <div class="field border round label">
-                            <input type="number" id="guests_count" name="guests_count" min="1" value="<%= guests_count %>" required>
-                            <label for="guests_count">Number of guests</label>
+                        <% if (dateError) { %>
+                            <p class="booking-form__validation-error-1"><%= dateError.msg %></p>
+                        <% } %>
+
+                        <% let guestsCountError = false;
+                        if (typeof validationErrors !== 'undefined') {
+                            guestsCountError = validationErrors.find(err => err.path === 'guests_count');
+                        }%>
+                        <div class="row">
+                            <div class="field border round label <%= guestsCountError ? 'invalid' : ''%> booking-form__guests-count">
+                                <input type="number" id="guests_count" name="guests_count" min="1" value="<%= guests_count %>" required>
+                                <label for="guests_count">Number of guests</label>
+                            </div>
                         </div>
+                        <% if (guestsCountError) { %>
+                            <p class="booking-form__validation-error-2"><%= guestsCountError.msg %></p>
+                        <% } %>
                     </div>
 
-                    <hr>
+                    <input type="hidden" name="listing_id" value="<%= listing.id %>">
+
+                    <hr style="margin-top: 2rem">
 
                     <div>
                         <div class="row space-between">
                             <p id="total-price" class="font-size-20">
-                                $<%= Number.isNaN(listing.price_per_night * nights) ? 0 : listing.price_per_night * nights %> total
+                                <% if (!Number.isNaN(listing.price_per_night * nights)) { %>
+                                    $<%= listing.price_per_night * nights %> total
+                                <% } %>
                             </p>
-                            <button type="submit">Book</button>
+                            <button type="submit" class="booking-form__submit-button">Book</button>
                         </div>
                     </div>
                 </form>

@@ -2,7 +2,7 @@ import Amenity from '../models/Amenity.js';
 import SavedSearch from '../models/SavedSearch.js';
 import SavedSearchAmenities from "../models/SavedSearchAmenities.js";
 
-class FilterController {
+class FiltersController {
     static async getFilterPage(req, res) {
         try {
             const {
@@ -25,7 +25,7 @@ class FilterController {
             const selectedAmenities = amenities ? amenities.split(',') : [];
 
             res.render('listings/filter-page', {
-                title: 'NestScout | Filter listings',
+                // title: 'NestScout | Filter listings',
                 city,
                 check_in,
                 check_out,
@@ -64,7 +64,11 @@ class FilterController {
             sort_order
         } = query;
 
-        const lastSavedSearches = await SavedSearch.read({ user_id }, 3, 'created_at DESC');
+        const lastSavedSearches = await SavedSearch.read({
+            where: { user_id },
+            limit: 3,
+            orderBy: 'created_at DESC'
+        });
 
         const savedSearchData = {
             user_id,
@@ -90,26 +94,35 @@ class FilterController {
         );
 
         if (matchingSearch) {
-            await SavedSearch.update(savedSearchData, { id: matchingSearch.id });
+            await SavedSearch.update({
+                data: savedSearchData,
+                where: { id: matchingSearch.id }
+            });
 
-            await SavedSearchAmenities.delete({ saved_search_id: matchingSearch.id });
+            await SavedSearchAmenities.delete({
+                where: { saved_search_id: matchingSearch.id }
+            });
 
             if (amenities && amenities.length > 0) {
                 for (const amenityId of amenities.split(',').map(id => parseInt(id))) {
                     await SavedSearchAmenities.create({
-                        saved_search_id: matchingSearch.id,
-                        amenity_id: amenityId
+                        data: {
+                            saved_search_id: matchingSearch.id,
+                            amenity_id: amenityId
+                        }
                     });
                 }
             }
         } else {
-            const newSavedSearch = await SavedSearch.create(savedSearchData);
+            const newSavedSearch = await SavedSearch.create({ data: savedSearchData });
 
             if (amenities && amenities.length > 0) {
                 for (const amenityId of amenities.split(',').map(id => parseInt(id))) {
                     await SavedSearchAmenities.create({
-                        saved_search_id: newSavedSearch.id,
-                        amenity_id: amenityId
+                        data:{
+                            saved_search_id: newSavedSearch.id,
+                            amenity_id: amenityId
+                        }
                     });
                 }
             }
@@ -117,4 +130,4 @@ class FilterController {
     }
 }
 
-export default FilterController;
+export default FiltersController;

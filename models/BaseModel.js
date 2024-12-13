@@ -4,7 +4,7 @@ class BaseModel {
     static table = '';
     static db = pool;
 
-    static async create(data) {
+    static async create({ data }) {
         const keys = Object.keys(data);
         const values = Object.values(data);
         const placeholders = keys.map(() => '?').join(', ');
@@ -16,7 +16,7 @@ class BaseModel {
         return { id: insertedId, ...data };
     }
 
-    static async read(where = {}, limit = null, orderBy = null) {
+    static async read({ where = {}, limit = null, orderBy = null } = {}) {
         let sql = `SELECT * FROM ${this.table}`;
         const values = [];
 
@@ -41,7 +41,7 @@ class BaseModel {
         return rows;
     }
 
-    static async update(data, where) {
+    static async update({ data, where }) {
         const setClauses = Object.keys(data).map((key) => `${key} = ?`).join(', ');
         const whereClauses = Object.keys(where).map((key) => `${key} = ?`).join(' AND ');
 
@@ -51,7 +51,7 @@ class BaseModel {
         return result;
     }
 
-    static async delete(where) {
+    static async delete({ where }) {
         const whereClauses = Object.keys(where).map((key) => `${key} = ?`).join(' AND ');
 
         const sql = `DELETE FROM ${this.table} WHERE ${whereClauses}`;

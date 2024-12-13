@@ -1,0 +1,10 @@
+<h1>Profile page</h1>
+<h5>Listings</h5>
+<% listings.forEach(listing => { %>
+    <p><%= listing.title %></p>
+<% }) %>
+<hr>
+<h5>Bookings</h5>
+<% bookings.forEach(booking => { %>
+    <p><%= booking.listing.title %></p>
+<% }) %>

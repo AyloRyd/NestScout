@@ -14,6 +14,7 @@ import indexRouter from './routes/index.js';
 import authenticationRouter from './routes/authentication.js';
 import userRouter from './routes/user.js';
 import listingsRouter from './routes/listings.js';
+import bookingsRouter from './routes/bookings.js';
 
 config();
 
@@ -28,6 +29,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static('public'));
+app.use('/storage', express.static(path.resolve('storage')));
 
 const MySQLStore = express_mysql_session(session);
 const options = {
@@ -66,6 +68,7 @@ app.use('/', indexRouter);
 app.use('/authentication', authenticationRouter);
 app.use('/user', userRouter)
 app.use('/listings', listingsRouter);
+app.use('/bookings', bookingsRouter);
 
 app.use((req, res, next) => {
   next(createError(404));

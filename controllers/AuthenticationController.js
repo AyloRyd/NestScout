@@ -1,5 +1,6 @@
 import bcrypt from 'bcryptjs';
 import { validationResult } from "express-validator";
+
 import User from '../models/User.js';
 
 class AuthenticationController {
@@ -31,7 +32,7 @@ class AuthenticationController {
         const { email, password } = req.body;
 
         try {
-            const [user] = await User.read({ email });
+            const [user] = await User.read({ where: { email } });
             if (!user) {
                 req.flash('error', {
                     msg: 'There\'s no user with that e-mail address.',
@@ -104,10 +105,12 @@ class AuthenticationController {
         try {
             const hashedPassword = await bcrypt.hash(password, 12);
             await User.create({
-                first_name: firstName,
-                last_name: lastName,
-                email: email,
-                password: hashedPassword,
+                data: {
+                    first_name: firstName,
+                    last_name: lastName,
+                    email: email,
+                    password: hashedPassword
+                }
             });
 
             req.flash('success', 'Signup successful. Please log in.');

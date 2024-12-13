@@ -1,12 +1,14 @@
 import { Router } from 'express';
 import { body } from 'express-validator';
 
-import UserController from '../controllers/UserController.js';
+import UsersController from '../controllers/UsersController.js';
 import User from '../models/User.js';
 
 const router = Router();
 
-router.get('/edit', UserController.getEditPage);
+router.get('/profile', UsersController.getProfilePage);
+
+router.get('/edit', UsersController.getEditPage);
 
 router.post(
     '/edit',
@@ -15,7 +17,7 @@ router.post(
             .isEmail()
             .withMessage('Please enter a valid email.')
             .custom(async (email, { req }) => {
-                const [user] = await User.read({ email });
+                const [user] = await User.read({ where: { email } });
                 if (user && user.id !== req.session.user.id) {
                     throw new Error('E-Mail already exists, please pick a different one.');
                 }
@@ -51,10 +53,10 @@ router.post(
                 return true;
             }),
     ],
-    UserController.editUser
+    UsersController.editUser
 );
 
-router.get('/delete', UserController.getDeletePage);
+router.get('/delete', UsersController.getDeletePage);
 
 router.delete(
     '/delete',
@@ -63,7 +65,7 @@ router.delete(
             .notEmpty()
             .withMessage('Password is required.')
     ],
-    UserController.deleteUser
+    UsersController.deleteUser
 );
 
 export default router;

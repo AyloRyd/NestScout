@@ -6,7 +6,12 @@ class SavedListingsController {
         const { userId, listingId } = req.body;
 
         try {
-            const savedListing = await SavedListing.create({ user_id: userId, listing_id: listingId });
+            const savedListing = await SavedListing.create({
+                data: {
+                    user_id: userId,
+                    listing_id: listingId
+                }
+            });
             res.status(200).json({ message: 'Listing saved successfully!', data: savedListing });
         } catch (error) {
             console.error('Error saving listing:', error);
@@ -15,10 +20,16 @@ class SavedListingsController {
     }
 
     static async removeSavedListing(req, res) {
+        console.log(req.body);
         const { userId, listingId } = req.body;
 
         try {
-            const result = await SavedListing.delete({ user_id: userId, listing_id: listingId });
+            const result = await SavedListing.delete({
+                where: {
+                    user_id: userId,
+                    listing_id: listingId
+                }
+            });
             if (result.affectedRows === 0) {
                 return res.status(404).json({ message: 'Saved listing not found.' });
             }
@@ -33,7 +44,7 @@ class SavedListingsController {
         const { userId } = req.params;
 
         try {
-            const savedListings = await SavedListing.read({ user_id: userId });
+            const savedListings = await SavedListing.read({ where: { user_id: userId } });
 
             const listingIds = savedListings.length > 0
                 ? savedListings.map(savedListing => savedListing.listing_id)
@@ -42,7 +53,7 @@ class SavedListingsController {
             const listings = listingIds.length > 0
                 ? await Promise.all(
                     listingIds.map(async id => {
-                        const [listing] = await Listing.read({ id });
+                        const [listing] = await Listing.read({ where: { id } });
                         return listing;
                     })
                 ).then(results => results.filter(Boolean))

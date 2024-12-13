@@ -27,7 +27,7 @@ router.post(
             .isEmail()
             .withMessage('Please enter a valid email.')
             .custom(async (email) => {
-                const [user] = await User.read({ email });
+                const [user] = await User.read({ where: { email } });
                 if (user) {
                     throw new Error('E-Mail already exists, please pick a different one.');
                 }

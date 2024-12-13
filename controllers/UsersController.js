@@ -1,18 +1,19 @@
 import bcrypt from 'bcryptjs';
 import { validationResult } from "express-validator";
+
 import User from '../models/User.js';
+import Listing from '../models/Listing.js';
+import Booking from '../models/Booking.js';
 
 class UsersController {
-    static async getEditPage(req, res) {
-        const [user] = await User.read({ id: req.session.user.id });
-
+    static getEditPage(req, res) {
         res.render('user/edit', {
             title: 'NestScout | Edit account',
             error: null,
             oldInput: {
-                firstName: user.first_name,
-                lastName: user.last_name || '',
-                email: user.email,
+                firstName: req.session.user.firstName,
+                lastName: req.session.user.lastName || '',
+                email: req.session.user.email,
                 password: '',
                 newPassword: '',
                 confirmNewPassword: '',
@@ -36,7 +37,7 @@ class UsersController {
         const { firstName, lastName, email, password, newPassword } = req.body;
 
         try {
-            const [user] = await User.read({ id: req.session.user.id });
+            const [user] = await User.read({ where: { id: req.session.user.id } });
 
             const doMatch = await bcrypt.compare(password, user.password);
             if (!doMatch) {
@@ -58,7 +59,10 @@ class UsersController {
                 password: newPassword ? await bcrypt.hash(newPassword, 12) : user.password,
             };
 
-            await User.update(updatedUser, { id: req.session.user.id });
+            await User.update({
+                data: updatedUser,
+                where: { id: req.session.user.id }
+            });
 
             req.session.user.firstName = firstName;
             req.session.user.lastName = lastName;
@@ -101,7 +105,7 @@ class UsersController {
         const { password } = req.body;
 
         try {
-            const [user] = await User.read({ id: req.session.user.id });
+            const [user] = await User.read({ where: { id: req.session.user.id } });
 
             const doMatch = await bcrypt.compare(password, user.password);
             if (!doMatch) {
@@ -116,7 +120,7 @@ class UsersController {
                 });
             }
 
-            await User.delete({ id: req.session.user.id });
+            await User.delete({ where: { id: req.session.user.id } });
 
             req.session.destroy((err) => {
                 if (err) {
@@ -128,6 +132,20 @@ class UsersController {
         } catch (err) {
             next(err);
         }
+    }
+
+    static async getProfilePage(req, res) {
+        const listings = await Listing.read({ where: { host_id: req.session.user.id } });
+        const bookings = await Booking.read({ where: { guest_id: req.session.user.id } });
+        for (const booking of bookings) {
+            const listing = await Listing.read({ where: { id: booking.listing_id } });
+            booking.listing = listing[0];
+        }
+        res.render('user/profile', {
+            title: 'NestScout | Profile',
+            listings,
+            bookings
+        });
     }
 }
 

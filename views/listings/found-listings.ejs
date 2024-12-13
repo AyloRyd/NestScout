@@ -6,11 +6,11 @@
     </p>
     <% if (typeof showFilterButton !== 'undefined' && showFilterButton !== null && showFilterButton) { %>
         <div class="row">
-<!--            <% if (additionalFiltersApplied) { %>-->
-<!--                <div class="filters-applied">-->
-<!--                    <p>Some filters applied</p>-->
-<!--                </div>-->
-<!--            <% } %>-->
+            <% if (additionalFiltersApplied) { %>
+                <a href="/listings/search?<%= new URLSearchParams({city, check_in, check_out, guests_count}) %>">
+                    <button class="chip active border found-listings__header__reset-filters-button">Reset filters</button>
+                </a>
+            <% } %>
             <a
                     href="/listings/filter?<%= new URLSearchParams({
                 city,
@@ -27,7 +27,7 @@
                 sort_order: typeof sort_order !== 'undefined' ? sort_order : '',
                 amenities: typeof amenities !== 'undefined' ? amenities : ''
             }).toString() %>">
-                <button class="<%= additionalFiltersApplied ? 'fill' : '' %> chip active border found-listings__header__filter-button">
+                <button class="chip active border found-listings__header__filter-button">
                     <i>tune</i>
                 </button>
             </a>

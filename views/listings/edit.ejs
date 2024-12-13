@@ -1,7 +1,7 @@
 <div class="listing-crating-container">
     <h3 class="form-title"><%= title.split(' | ')[1]%></h3>
 
-    <form action="/listings/edit/<%= listing.id %>" method="POST" class="listing-create-form grid-row-gap">
+    <form action="/listings/edit/<%= listing.id %>" method="POST" class="listing-create-form grid-row-gap" enctype="multipart/form-data">
 
         <div class="field border label grid-span-3-6">
             <input type="text" id="title" name="title" value="<%= listing.title %>" minlength="4" required>
@@ -58,15 +58,16 @@
         </div>
 
         <div class="field border label grid-span-2-6">
-            <input type="number" id="floor" name="floor" value="<%= listing.floor %>" min="0" readonly>
+            <input type="number" id="floor" name="floor" value="<%= listing.floor %>" min="0" <%= listing.floor ? 'readonly' : '' %>>
             <label for="floor">Floor (optional)</label>
-            <span class="helper">You can not change this field</span>
+            <% if (listing.floor) { %>
+                <span class="helper">You cannot change this field</span>
+            <% } %>
         </div>
 
         <div class="field border label grid-span-2-6">
-            <input type="number" id="area" name="area" value="<%= listing.area %>" min="0" step="0.01" readonly>
+            <input type="number" id="area" name="area" value="<%= listing.area %>" min="0" step="0.01">
             <label for="area">Area (optional, m²)</label>
-            <span class="helper">You can not change this field</span>
         </div>
 
         <div class="field border label grid-span-2-6">
@@ -96,6 +97,21 @@
                 </button>
             <% }) %>
         </fieldset>
+
+        <div id="drop-area" class="edit-listing-drop-area">
+            <input type="file" id="file-input" name="images" accept="image/*" multiple>
+            <label for="file-input">
+                Drag and drop images or click anywhere to upload
+                <br>
+                <span class="secondary-text">(maximum 5)</span>
+            </label>
+            <div id="image-gallery">
+                <div class="upload">
+                    <i class="large-icon">upload</i>
+                </div>
+            </div>
+            <input type="hidden" id="image-paths" name="existingImages" value="<%= JSON.stringify(imagePaths) %>">
+        </div>
 
         <button type="submit" class="listing-create__submit-button">Save changes</button>
     </form>

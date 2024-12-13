@@ -74,6 +74,7 @@ footer {
 
 .row {
   display: flex;
+  gap: 0.3rem;
   margin: 0;
 }
 
@@ -272,17 +273,10 @@ footer {
   border-radius: 20px;
 }
 
-.filters-applied {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  font-size: 12px;
-  width: fit-content;
-}
-
-.filters-applied p {
-  width: 4.5rem;
-  text-align: right;
+.found-listings__header__reset-filters-button {
+  width: 5rem;
+  height: 3.5rem;
+  border-radius: 20px;
 }
 
 .found-listings__not-found {
@@ -301,7 +295,8 @@ footer {
 
 .host-info-container {
   width: 62%;
-  background-color: var(--surface-container);
+  /*background-color: var(--surface-container);*/
+  box-shadow: #111111 0 3px 20px 10px;
   height: 7rem;
   border-radius: 24px;
   margin-bottom: 2rem;
@@ -336,6 +331,30 @@ footer {
   padding: 2rem;
   align-self: flex-start;
   margin-top: 1.5rem;
+}
+
+.booking-form__validation-error-1 {
+  margin: 1.5rem 0 0 0;
+  display: flex;
+  justify-content: center;
+  background-color: var(--surface);
+  color: #e19f98;
+}
+
+.booking-form__validation-error-2 {
+  margin: 1.5rem 0 0 0;
+  display: flex;
+  justify-content: center;
+  background-color: var(--surface);
+  color: #e19f98;
+}
+
+.booking-form__guests-count {
+  width: 100%;
+}
+
+.booking-form__submit-button {
+  justify-self: flex-end;
 }
 
 .listing-page__booking-form {
