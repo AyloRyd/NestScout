@@ -25,7 +25,7 @@ class FiltersController {
             const selectedAmenities = amenities ? amenities.split(',') : [];
 
             res.render('listings/filter-page', {
-                // title: 'NestScout | Filter listings',
+                title: 'NestScout | Filter listings',
                 city,
                 check_in,
                 check_out,

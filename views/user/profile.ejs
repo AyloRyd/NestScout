@@ -1,10 +1,113 @@
-<h1>Profile page</h1>
-<h5>Listings</h5>
-<% listings.forEach(listing => { %>
-    <p><%= listing.title %></p>
-<% }) %>
-<hr>
-<h5>Bookings</h5>
-<% bookings.forEach(booking => { %>
-    <p><%= booking.listing.title %></p>
-<% }) %>
+<div class="profile-page">
+    <h1>Profile page</h1>
+    <article class="profile__listings-article">
+        <details>
+            <summary>
+                <a class="profile__listings-article-title">Listings</a>
+            </summary>
+            <% if (listings.length > 0) { %>
+                <div class="found-listings profile-listings">
+                    <% listings.forEach(listing => { %>
+                        <div class="found-listings__item">
+                            <img src="<%= listing.imagePath %>" alt="Listing image" class="found-listing__image">
+                            <div class="found-listing__info profile-listing-info">
+                                <a class="profile-listing-top-container" href="/listings/<%= listing.id %>?nights=&check_in=&check_out=&guests_count=">
+                                    <p class="font-size-20">
+                                        <%= listing.title.length > 23 ? `${listing.title.slice(0, 23).trim()}...` : listing.title %>
+                                    </p>
+                                    <p>
+                                        <%= listing.description.length > 60 ? `${listing.description.slice(0, 60).trim()}...` : listing.description %>
+                                    </p>
+                                    <p>Maximum guests: <%= listing.maximum_guests %></p>
+                                    <p class="font-size-16">
+                                        <span class="font-weight-bold">$<%= listing.price_per_night %></span> night
+                                    </p>
+                                </a>
+                                <div class="found-listing__actions">
+                                    <a href="/listings/edit/<%= listing.id %>">
+                                        <button>
+                                            <i>edit</i>
+                                            Edit
+                                        </button>
+                                    </a>
+                                    <a href="/listings/delete/<%= listing.id %>" onclick="
+                                            event.preventDefault();
+                                            if (confirm('Are you sure you want to delete this listing?')) {
+                                            axios.post('/listings/delete/<%= listing.id %>')
+                                            .then(() => location.reload())
+                                            .catch(err => console.error(err));
+                                            }">
+                                        <button class="delete-listing-button">
+                                            <i>delete</i>
+                                            Delete
+                                        </button>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    <% }) %>
+                </div>
+            <% } else { %>
+                <div class="found-listings__not-found">
+                    <p>No listings.</p>
+                </div>
+            <% } %>
+        </details>
+    </article>
+
+    <article class="profile__bookings-article">
+        <details>
+            <summary>
+                <a class="profile__listings-article-title">Bookings</a>
+            </summary>
+            <div class="profile-bookings">
+                <% bookings.forEach(booking => { %>
+                    <div class="profile-booking">
+                        <p style="font-size: 1rem;">Booking ID: <%= booking.id %></p>
+                        <h3 style="font-size: 1.1rem; font-weight: bold;">
+                            <%= booking.listing.title %> by <%= booking.listing.host.first_name %> <%= booking.listing.host.last_name %>
+                        </h3>
+                        <p style="font-size: 1rem;">Location: <%= booking.listing.country %>, <%= booking.listing.city %></p>
+                        <p style="font-size: 1rem;">
+                            Address: <%= booking.listing.street %>, <%= booking.listing.house_number %>, <%= booking.listing.postal_code %>
+                        </p>
+                        <p style="font-size: 1rem;">Guests Count: <%= booking.guests_count %></p>
+                        <p style="font-size: 1rem;">Check-in: <%= new Date(booking.check_in).toLocaleDateString('uk-UA') %></p>
+                        <p style="font-size: 1rem;">Check-out: <%= new Date(booking.check_out).toLocaleDateString('uk-UA') %></p>
+                        <p style="font-size: 1rem;">Nights: <%= booking.nights %></p>
+                        <p style="font-size: 1rem; font-weight: bold;">Price per night: $<%= booking.listing.price_per_night %></p>
+                        <p style="font-size: 1.25rem; font-weight: bold;">
+                            Total Price: $<%= booking.total_price %>
+                        </p>
+                        <p style="font-size: 0.9rem; color: #999;">Booking Date: <%= new Date(booking.booking_date).toLocaleDateString('uk-UA') %></p>
+
+                        <p><%= booking.status %></p>
+
+                        <% if (booking.status !== 'Cancelled') { %>
+                            <div class="booking-actions">
+                                <a href="/bookings/download/<%= booking.id %>">
+                                    <button>
+                                        <i>download</i>
+                                        Download check
+                                    </button>
+                                </a>
+                                <button onclick="
+                                        event.preventDefault();
+                                        if (confirm('Are you sure you want to cancel this booking?')) {
+                                            axios.post('/bookings/cancel/<%= booking.id %>')
+                                            .then(() => location.reload())
+                                            .catch(err => console.error(err));
+                                        }"
+                                        class="delete-listing-button"
+                                        style="margin-top: 1rem;">
+                                    <i>cancel</i>
+                                    Cancel booking
+                                </button>
+                            </div>
+                        <% } %>
+                    </div>
+                <% }) %>
+            </div>
+        </details>
+    </article>
+</div>

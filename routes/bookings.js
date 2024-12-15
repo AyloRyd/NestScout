@@ -44,4 +44,8 @@ router.post(
     BookingsController.makeBooking
 );
 
+router.get('/download/:id', BookingsController.downloadBookingCheck);
+
+router.post('/cancel/:id', BookingsController.cancelBooking)
+
 export default router;

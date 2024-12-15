@@ -247,6 +247,26 @@ footer {
   padding: 1rem 1rem 1rem 1.5rem;
 }
 
+.found-listing__info > a {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0;
+}
+
+.found-listing__actions {
+  margin: 1rem 0 1rem 0;
+}
+
+.profile-listing-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0;
+  height: 100%;
+  justify-content: space-between;
+}
+
 .found-listings__info__total-price {
   color: #b6b6b6;
   text-decoration: underline;
@@ -254,6 +274,7 @@ footer {
 
 .found-listing__image {
   width: 100%;
+  height: 306px !important;
 }
 
 .found-listings__header {
@@ -614,4 +635,72 @@ select option {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+}
+
+.profile__listings {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+.profile-page {
+  padding: 20px 80px;
+}
+
+.profile-listings {
+  padding: 2rem 0 0 0;
+}
+
+.profile-listing-top-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 0;
+  gap: 0;
+}
+
+.profile-listing-top-container > p {
+  margin: 0.3rem;
+}
+
+.profile__listings-article-title {
+  gap: 0.5rem;
+  font-size: 1rem;
+}
+
+.profile__listings-article {
+  margin-bottom: 2rem;
+}
+
+.delete-listing-button {
+  background-color: #ff6347;
+}
+
+.profile-bookings {
+  margin-top: 2rem;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+.profile-booking {
+  padding: 1rem;
+  border-radius: 20px;
+  border: 1px solid #7a8285;
+}
+
+.statistics-container {
+  padding: 20px 80px;
+}
+
+.tables {
+  display: flex;
+  flex-direction: column;
+  gap: 5rem;
+  margin-top: 2rem;
+}
+
+.pdf-download {
+  margin-top: 1rem;
 }

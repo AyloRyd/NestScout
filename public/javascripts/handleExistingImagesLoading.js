@@ -4,7 +4,7 @@ export function handleExistingImagesLoading() {
 
     const imageGallery = dropArea.querySelector("#image-gallery");
     const uploadDiv = dropArea.querySelector(".upload");
-    const imagePathsInput = dropArea.querySelector("#image-paths");
+    const imagePathsInput = dropArea.querySelector("#image-paths"); // Это поле используется для хранения путей
 
     if (!imagePathsInput || !imagePathsInput.value) return;
 
@@ -36,9 +36,10 @@ export function handleExistingImagesLoading() {
             imageContainer.remove();
             updateUploadDiv();
 
-            const currentPaths = JSON.parse(document.querySelector("#existing-images").value);
+            // Удаляем путь из input #image-paths
+            const currentPaths = JSON.parse(imagePathsInput.value);
             const updatedPaths = currentPaths.filter(p => p !== path);
-            document.querySelector("#existing-images").value = JSON.stringify(updatedPaths);
+            imagePathsInput.value = JSON.stringify(updatedPaths);
         });
 
         imageContainer.appendChild(img);

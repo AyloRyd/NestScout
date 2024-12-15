@@ -37,6 +37,8 @@ router.get('/edit/:id', ListingsController.getListingEditingPage);
 
 router.post('/edit/:id', upload.array('images', 5), ListingsController.updateListing);
 
+router.post('/delete/:id', ListingsController.deleteListing);
+
 router.post('/save', SavedListingsController.addSavedListing);
 
 router.delete('/saved-listings/remove', SavedListingsController.removeSavedListing);

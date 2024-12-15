@@ -1,3 +1,5 @@
+import fs from 'fs';
+import path from 'path';
 import bcrypt from 'bcryptjs';
 import { validationResult } from "express-validator";
 
@@ -135,17 +137,42 @@ class UsersController {
     }
 
     static async getProfilePage(req, res) {
-        const listings = await Listing.read({ where: { host_id: req.session.user.id } });
-        const bookings = await Booking.read({ where: { guest_id: req.session.user.id } });
-        for (const booking of bookings) {
-            const listing = await Listing.read({ where: { id: booking.listing_id } });
-            booking.listing = listing[0];
+        try {
+            const listings = await Listing.read({ where: { host_id: req.session.user.id } });
+
+            listings.forEach(listing => {
+                const imagesFolderPath = listing.path_to_images_folder
+                    ? path.join(process.cwd(), listing.path_to_images_folder)
+                    : null;
+
+                if (imagesFolderPath && fs.existsSync(imagesFolderPath)) {
+                    const files = fs.readdirSync(imagesFolderPath);
+                    listing.imagePath = files.length > 0
+                        ? path.posix.join('/', listing.path_to_images_folder, files[0])
+                        : '/images/no-image.jpg';
+                } else {
+                    listing.imagePath = '/images/no-image.jpg';
+                }
+            });
+
+            const bookings = await Booking.read({ where: { guest_id: req.session.user.id } });
+
+            for (const booking of bookings) {
+                const listing = await Listing.read({ where: { id: booking.listing_id } });
+                booking.listing = listing[0];
+                [booking.listing.host] = await User.read({ where: { id: booking.listing.host_id } });
+                booking.nights = (new Date(booking.check_out) - new Date(booking.check_in)) / (1000 * 60 * 60 * 24);
+            }
+
+            res.render('user/profile', {
+                title: 'NestScout | Profile',
+                listings,
+                bookings,
+            });
+        } catch (error) {
+            console.error('Error in getProfilePage:', error);
+            res.status(500).send('Internal Server Error');
         }
-        res.render('user/profile', {
-            title: 'NestScout | Profile',
-            listings,
-            bookings
-        });
     }
 }
 

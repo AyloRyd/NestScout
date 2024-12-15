@@ -48,6 +48,21 @@ class ListingsController {
                 sort_order
             });
 
+            listings.forEach(listing => {
+                const imagesFolderPath = listing.path_to_images_folder
+                    ? path.join(process.cwd(), listing.path_to_images_folder)
+                    : null;
+
+                if (imagesFolderPath && fs.existsSync(imagesFolderPath)) {
+                    const files = fs.readdirSync(imagesFolderPath);
+                    listing.imagePath = files.length > 0
+                        ? path.posix.join('/', listing.path_to_images_folder, files[0])
+                        : '/images/no-image.jpg';
+                } else {
+                    listing.imagePath = '/images/no-image.jpg';
+                }
+            });
+
             if (req.session.isLoggedIn) {
                 await FiltersController.saveFilter(req.session.user.id, req.query);
             }
@@ -195,12 +210,23 @@ class ListingsController {
                     fs.renameSync(file.path, targetPath);
                 });
 
-                fs.rm('uploads', { recursive: true, force: true }, (err) => {
+                const uploadFolderPath = path.join(process.cwd(), 'uploads');
+                fs.readdir(uploadFolderPath, (err, files) => {
                     if (err) {
-                        console.error(`Failed to remove temporary folder: uploads`, err);
-                    } else {
-                        console.log(`Temporary folder removed: uploads`);
+                        console.error(`Failed to read temporary folder: ${uploadFolderPath}`, err);
+                        return;
                     }
+
+                    files.forEach(file => {
+                        const filePath = path.join(uploadFolderPath, file);
+                        fs.unlink(filePath, err => {
+                            if (err) {
+                                console.error(`Failed to delete file: ${filePath}`, err);
+                            } else {
+                                console.log(`Deleted file: ${filePath}`);
+                            }
+                        });
+                    });
                 });
             }
 
@@ -300,6 +326,11 @@ class ListingsController {
 
             if (!fs.existsSync(imagesFolderPath)) {
                 fs.mkdirSync(imagesFolderPath, { recursive: true });
+
+                await Listing.update({
+                    data: { path_to_images_folder: imagesFolderPath },
+                    where: { id }
+                });
             }
 
             const currentImages = fs.readdirSync(imagesFolderPath);
@@ -310,7 +341,6 @@ class ListingsController {
                     fs.unlinkSync(filePath);
                 }
             });
-
 
             if (req.files && req.files.length > 0) {
                 req.files.forEach(file => {
@@ -338,11 +368,34 @@ class ListingsController {
                 });
             });
 
-
             res.redirect(`/listings/${id}`);
         } catch (error) {
             console.error('Error in ListingsController.updateListing:', error);
             res.status(500).send('Server Error');
+        }
+    }
+
+    static async deleteListing(req, res) {
+        try {
+            const { id } = req.params;
+
+            const listing = await Listing.read({ where: { id } });
+            if (listing.length === 0) {
+                return res.status(404).json({ message: 'Listing not found' });
+            }
+
+            await Listing.delete({ where: { id } });
+
+            const imagesFolderPath = path.join('storage', 'listings-images', `${id}`);
+            if (fs.existsSync(imagesFolderPath)) {
+                fs.rmSync(imagesFolderPath, { recursive: true, force: true });
+                console.log(`Deleted images folder: ${imagesFolderPath}`);
+            }
+
+            res.status(200).json({ message: 'Listing deleted successfully' });
+        } catch (error) {
+            console.error('Error deleting listing:', error);
+            res.status(500).json({ message: 'Failed to delete listing' });
         }
     }
 }

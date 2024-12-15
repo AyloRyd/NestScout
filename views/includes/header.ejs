@@ -40,6 +40,10 @@
                                 <i>favorite</i>
                                 <span>Saved listings</span>
                             </a>
+                            <a href="/statistics/<%= user.id %>" class="row">
+                                <i>bar_chart</i>
+                                App statistics
+                            </a>
                             <a class="row" href="authentication/logout" onclick="
                                 event.preventDefault();
                                 axios.post('/authentication/logout')

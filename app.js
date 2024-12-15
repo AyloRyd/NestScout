@@ -15,6 +15,7 @@ import authenticationRouter from './routes/authentication.js';
 import userRouter from './routes/user.js';
 import listingsRouter from './routes/listings.js';
 import bookingsRouter from './routes/bookings.js';
+import statisticsRouter from './routes/statistics.js';
 
 config();
 
@@ -69,6 +70,7 @@ app.use('/authentication', authenticationRouter);
 app.use('/user', userRouter)
 app.use('/listings', listingsRouter);
 app.use('/bookings', bookingsRouter);
+app.use('/statistics', statisticsRouter);
 
 app.use((req, res, next) => {
   next(createError(404));

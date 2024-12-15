@@ -1,0 +1,36 @@
+<div class="statistics-container">
+    <h3>Statistics</h3>
+    <div class="tables">
+        <% statistics.forEach((stat, index) => { %>
+            <div class="statistic">
+                <h5><%= stat.title %></h5>
+                <table class="stripes">
+                    <thead>
+                    <tr>
+                        <% stat.columns.forEach(column => { %>
+                            <th><%= column %></th>
+                        <% }) %>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <% stat.data.forEach(row => { %>
+                        <tr>
+                            <% Object.values(row).forEach(value => { %>
+                                <td><%= value %></td>
+                            <% }) %>
+                        </tr>
+                    <% }) %>
+                    </tbody>
+                </table>
+
+                <% if (index === 0) { %>
+                    <div class="pdf-download">
+                        <form action="/statistics/pdf/<%= user.id %>" method="GET">
+                            <button type="submit"><i class="bigger-icon">download</i> PDF Report</button>
+                        </form>
+                    </div>
+                <% } %>
+            </div>
+        <% }) %>
+    </div>
+</div>

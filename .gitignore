@@ -26,3 +26,7 @@ pids
 
 # JetBrains IDEs
 .idea/
+
+# Temporary directories
+/uploads/
+/downloads/

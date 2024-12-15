@@ -40,7 +40,7 @@
         <% listings.forEach(listing => { %>
             <a class="found-listings__item"
                href="/listings/<%= listing.id %>?nights=<%= nights %>&check_in=<%= check_in %>&check_out=<%= check_out %>&guests_count=<%= guests_count %>">
-                <img src="/images/no-image.jpg" alt="Listing image" class="found-listing__image">
+                <img src="<%= listing.imagePath %>" alt="Listing image" class="found-listing__image">
                 <div class="found-listing__info">
                     <p class="font-size-20">
                         <%= listing.title.length > 23 ? `${listing.title.slice(0, 23).trim()}...` : listing.title %>
